@@ -11,7 +11,7 @@ const stylesHandler = 'style-loader';
 
 
 const config = {
-    entry: './src/index.js',
+    entry: './src/main.js',
     output: {
         path: path.resolve(__dirname, 'dist'),
     },
@@ -30,12 +30,23 @@ const config = {
     module: {
         rules: [
             {
+                test: /\.elm$/,
+                exclude: [/elm-stuff/, /node_modules/],
+                loader: 'elm-webpack-loader',
+                options: {
+                    files: [
+                        path.resolve(__dirname, "src/Main.elm"),
+                        // path.resolve(__dirname, "Path/To/OtherModule.elm")
+                    ]
+                }
+            },
+            {
                 test: /\.(js|jsx)$/i,
                 loader: 'babel-loader',
             },
             {
                 test: /\.css$/i,
-                use: [stylesHandler,'css-loader'],
+                use: [stylesHandler, 'css-loader'],
             },
             {
                 test: /\.s[ac]ss$/i,
@@ -45,8 +56,8 @@ const config = {
                 test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
                 type: 'asset',
             },
-            { 
-                test: /\.tsx?$/, 
+            {
+                test: /\.tsx?$/,
                 exclude: [/elm-stuff/, /node_modules/],
                 use: {
                     loader: "ts-loader",
@@ -63,8 +74,8 @@ const config = {
 module.exports = () => {
     if (isProduction) {
         config.mode = 'production';
-        
-        
+
+
     } else {
         config.mode = 'development';
     }
