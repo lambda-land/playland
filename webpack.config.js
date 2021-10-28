@@ -11,7 +11,7 @@ const stylesHandler = 'style-loader';
 
 
 const config = {
-    entry: './src/main.js',
+    entry: './src/main.ts',
     output: {
         path: path.resolve(__dirname, 'dist'),
     },
@@ -27,6 +27,9 @@ const config = {
         // Add your plugins here
         // Learn more about plugins from https://webpack.js.org/configuration/plugins/
     ],
+    resolve: {
+        extensions: ['.tsx', '.ts', '.js','.elm'],
+    },
     module: {
         rules: [
             {
