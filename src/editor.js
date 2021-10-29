@@ -132,7 +132,7 @@ import 'monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution.
 // END_LANGUAGES
 
 
-export function setup() {
+export function setup(container) {
     self.MonacoEnvironment = {
         getWorkerUrl: function (moduleId, label) {
             // if (label === 'json') {
@@ -150,10 +150,16 @@ export function setup() {
             return './editor.worker.bundle.js';
         }
     };
-    monaco.editor.create(document.getElementById('container'), {
+    monaco.editor.create(document.getElementById('editor'), {
         value: [
             'type Option<T> = Some<T> | None<T>;'
         ].join('\n'),
         language: 'typescript'
     });
+    // monaco.editor.create(container, {
+    //     value: [
+    //         'type Option<T> = Some<T> | None<T>;'
+    //     ].join('\n'),
+    //     language: 'typescript'
+    // });
 }

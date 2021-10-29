@@ -28,20 +28,24 @@ export function initLayout() {
 	// document.getElementsByTagName('head')[0].innerHTML += glTheme;
 	const gl = new GoldenLayout(document.getElementById("golden-layout"));
 
-
+	let cont: any = {};
 	gl.registerComponentFactoryFunction('test', (container,itemConfig) => {
-		let el = document.createElement("h1");
-		el.textContent = "This is a test";
+		let el = document.createElement('div');
+		el.id = 'editor';
+		el.setAttribute('style','width: 500; height: 500;');
 		container.element.append(el);
-
+		cont.container = container;
 		// let btn = document.createElement("button");
 		// btn.textContent = "Click Me!";
 		// btn.onclick = () => {
 		// 	clickCount++;
 		// };
 		// container.element.append(btn);
+		// container.element.append();
+
 	})
 
 	gl.loadLayout(config);
+	return cont;
 }
 
