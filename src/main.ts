@@ -5,6 +5,6 @@ Elm.Main.init({ node: document.getElementById('elm') });
 import { setup } from './editor.js';
 
 import { initLayout } from './layout';
-const cont = initLayout();
+initLayout();
 
-setup();
+// setTimeout(() => setup(), 2000);

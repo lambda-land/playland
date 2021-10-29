@@ -2,6 +2,7 @@
 import { GoldenLayout } from 'golden-layout';
 import { LayoutConfig } from "golden-layout";
 import { flattenDiagnosticMessageText } from 'typescript';
+import { setup } from './editor';
 
 export const config: LayoutConfig = {
   root: {
@@ -28,13 +29,14 @@ export function initLayout() {
 	// document.getElementsByTagName('head')[0].innerHTML += glTheme;
 	const gl = new GoldenLayout(document.getElementById("golden-layout"));
 
-	let cont: any = {};
+	// let cont: any = {};
 	gl.registerComponentFactoryFunction('test', (container,itemConfig) => {
 		let el = document.createElement('div');
+		el.innerText = 'Hello';
 		el.id = 'editor';
-		el.setAttribute('style','width: 500; height: 500;');
+		// el.setAttribute('style','width: 500; height: 500;');
+		setup(el);
 		container.element.append(el);
-		cont.container = container;
 		// let btn = document.createElement("button");
 		// btn.textContent = "Click Me!";
 		// btn.onclick = () => {
@@ -46,6 +48,5 @@ export function initLayout() {
 	})
 
 	gl.loadLayout(config);
-	return cont;
 }
 
