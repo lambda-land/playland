@@ -2,7 +2,7 @@ import { Elm } from './Main.elm';
 
 Elm.Main.init({ node: document.getElementById('elm') });
 
-import { setup } from './editor.js';
+// import { setup } from './editor';
 
 import { initLayout } from './layout';
 initLayout();

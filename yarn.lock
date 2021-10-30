@@ -5439,6 +5439,11 @@ type-is@~1.6.17, type-is@~1.6.18:
     media-typer "0.3.0"
     mime-types "~2.1.24"
 
+typesafe-storage@^1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/typesafe-storage/-/typesafe-storage-1.0.9.tgz#da8c271d12b23be1a34c5d98d3cbb467be00a9b7"
+  integrity sha512-M8+QNASuuPGh+6Y6ASKYbhxMHq3sTDZHO1DOdnZWRhx6oGSZP9lqAvMAEMTiyk7AXX8vXVtKcWSLOTo/+60m2Q==
+
 typescript@^4.4.4:
   version "4.4.4"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.4.4.tgz#2cd01a1a1f160704d3101fd5a58ff0f9fcb8030c"

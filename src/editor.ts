@@ -131,35 +131,73 @@ import 'monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution.
 // import 'monaco-editor/esm/vs/basic-languages/yaml/yaml.contribution.js';
 // END_LANGUAGES
 
+type Pair<T,U>=[T,U];
 
-export function setup(node) {
-    self.MonacoEnvironment = {
-        getWorkerUrl: function (moduleId, label) {
-            // if (label === 'json') {
-            // 	return './json.worker.bundle.js';
-            // }
-            // if (label === 'css' || label === 'scss' || label === 'less') {
-            // 	return './css.worker.bundle.js';
-            // }
-            // if (label === 'html' || label === 'handlebars' || label === 'razor') {
-            // 	return './html.worker.bundle.js';
-            // }
-            // if (label === 'typescript' || label === 'javascript') {
-            // 	return './ts.worker.bundle.js';
-            // }
-            return './editor.worker.bundle.js';
-        }
-    };
+export let editors= [];//: Pair<monaco.editor.IStandaloneCodeEditor,monaco.editor.ITextModel>[]= [];
+export let editor;
+
+// declare let self: any;
+// let MonacoEnvironment;
+export function setup(node: HTMLElement) {
+    // monaco.languages.typescript.typescriptDefaults.setEagerModelSync;
+    // MonacoEnvironment = {
+    //     getWorkerUrl: function (moduleId, label) {
+    //         // if (label === 'json') {
+    //         // 	return './json.worker.bundle.js';
+    //         // }
+    //         // if (label === 'css' || label === 'scss' || label === 'less') {
+    //         // 	return './css.worker.bundle.js';
+    //         // }
+    //         // if (label === 'html' || label === 'handlebars' || label === 'razor') {
+    //         // 	return './html.worker.bundle.js';
+    //         // }
+    //         // if (label === 'typescript' || label === 'javascript') {
+    //         // 	return './ts.worker.bundle.js';
+    //         // }
+    //         return './editor.worker.bundle.js';
+    //     }
+    // };
     // monaco.editor.create(document.getElementById('editor'), {
     //     value: [
     //         'type Option<T> = Some<T> | None<T>;'
     //     ].join('\n'),
     //     language: 'typescript'
     // });
-    monaco.editor.create(node, {
+    // const model = monaco.editor.createModel('type Option<T> = Some<T> | None<T>;','typescript');
+    editor = monaco.editor.create(node, {
         value: [
             'type Option<T> = Some<T> | None<T>;'
         ].join('\n'),
-        language: 'typescript'
+        language: 'typescript',
+        theme: 'vs-dark',
+        automaticLayout: true,
+        // readOnly: false,
     });
+
+    // editor.setModel(model);
+    // editors.push([editor,0]);
+
+
+    return node;
+}
+
+
+export function layout() {
+    // for (const [editor,model] of editors) {
+    //     editor.layout();
+    // }
+    editor.layout()
+}
+export function setValue(v: string) {
+    // for (const [editor,model] of editors) {
+    //     editor.setValue(v);
+    // }
+    editor.setValue(v);
+}
+
+// export const { layout, setValue } = editor;
+
+
+window.onresize = () => {
+    layout();
 }
