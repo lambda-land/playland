@@ -133,12 +133,12 @@ import 'monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution.
 
 type Pair<T,U>=[T,U];
 
-export let editors= [];//: Pair<monaco.editor.IStandaloneCodeEditor,monaco.editor.ITextModel>[]= [];
+export let editors: monaco.editor.IStandaloneCodeEditor[] = [];//: Pair<monaco.editor.IStandaloneCodeEditor,monaco.editor.ITextModel>[]= [];
 export let editor;
 
 // declare let self: any;
 // let MonacoEnvironment;
-export function setup(node: HTMLElement) {
+export function setup(node: HTMLElement, editorOptions={}) {
     // monaco.languages.typescript.typescriptDefaults.setEagerModelSync;
     // MonacoEnvironment = {
     //     getWorkerUrl: function (moduleId, label) {
@@ -164,19 +164,24 @@ export function setup(node: HTMLElement) {
     //     language: 'typescript'
     // });
     // const model = monaco.editor.createModel('type Option<T> = Some<T> | None<T>;','typescript');
-    editor = monaco.editor.create(node, {
+    const options = {
         value: [
-            'type Option<T> = Some<T> | None<T>;'
+`module Hello exposing (..)
+output : String
+output =
+    "Hello World!"`
         ].join('\n'),
         language: 'typescript',
         theme: 'vs-dark',
         automaticLayout: true,
         // readOnly: false,
-    });
+        ...editorOptions
+    };
+    editor = monaco.editor.create(node, options);
 
     // editor.setModel(model);
     // editors.push([editor,0]);
-
+    editors.push(editor);
 
     return node;
 }

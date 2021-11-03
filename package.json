@@ -6,6 +6,8 @@
   "author": "Nick,Liam,Iain",
   "private": true,
   "dependencies": {
+    "axios": "^0.24.0",
+    "base-64": "^1.0.0",
     "elm": "^0.19.1-5",
     "elm-webpack-loader": "^8.0.0",
     "golden-layout": "^2.4.0",
