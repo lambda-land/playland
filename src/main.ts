@@ -21,7 +21,7 @@ setInterval(() => {
         'language': 'elm',
         'source': source
     }
-    const nicks_rest_endpoint = pkg => 
+    const nicks_rest_endpoint = (pkg: any) => 
         `http://73.25.202.209:4445/eval/${encode(JSON.stringify(pkg))}`;
     axios.get(nicks_rest_endpoint(pkg))
         .then(res => {

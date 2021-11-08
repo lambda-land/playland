@@ -28,7 +28,7 @@ export function initLayout() {
 	// const glTheme = `<link type="text/css" rel="stylesheet" href="https://golden-layout.com/files/latest/css/goldenlayout-base.css" /><link type="text/css" rel="stylesheet" href="https://golden-layout.com/files/latest/css/goldenlayout-dark-theme.css" />`;
 	// document.getElementsByTagName('head')[0].innerHTML += glTheme;
 	const gl = new GoldenLayout(document.getElementById('golden-layout'));
-	const renderHTML = src => {
+	const renderHTML = (src: string) => {
 		const template = document.createElement('template');
 		template.innerHTML = src.trim();
 		return [template.content.firstChild, template.content.childNodes[0]];
