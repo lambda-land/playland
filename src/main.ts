@@ -35,5 +35,7 @@ setInterval(() => {
             failedCount += 1;
         });
     console.log({...pkg,encoded:nicks_rest_endpoint(pkg)});
-},2000);
+},4000);
 
+import './styles/style.scss';
+// import 'golden-layout/dist/less/'

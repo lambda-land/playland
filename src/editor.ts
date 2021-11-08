@@ -166,10 +166,18 @@ export function setup(node: HTMLElement, editorOptions={}) {
     // const model = monaco.editor.createModel('type Option<T> = Some<T> | None<T>;','typescript');
     const options = {
         value: [
-`module Hello exposing (..)
-output : String
-output =
-    "Hello World!"`
+`output : String
+output = "Hello World!"
+
+output
+output
+
+
+factorial : Int -> Int
+factorial n =
+  if n < 1 then 1 else n*factorial(n-1)
+
+factorial 10`
         ].join('\n'),
         language: 'typescript',
         theme: 'vs-dark',
