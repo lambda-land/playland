@@ -134,7 +134,6 @@ import 'monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution.
 type Pair<T,U>=[T,U];
 
 export let editors: monaco.editor.IStandaloneCodeEditor[] = [];//: Pair<monaco.editor.IStandaloneCodeEditor,monaco.editor.ITextModel>[]= [];
-export let editor;
 
 // declare let self: any;
 // let MonacoEnvironment;
@@ -185,7 +184,7 @@ factorial 10`
         // readOnly: false,
         ...editorOptions
     };
-    editor = monaco.editor.create(node, options);
+    const editor = monaco.editor.create(node, options);
 
     // editor.setModel(model);
     // editors.push([editor,0]);
@@ -196,21 +195,19 @@ factorial 10`
 
 
 export function layout() {
-    // for (const [editor,model] of editors) {
-    //     editor.layout();
-    // }
-    editor.layout()
+    for (const editor of editors) {
+        editor.layout();
+    }
 }
 export function setValue(v: string) {
-    // for (const [editor,model] of editors) {
-    //     editor.setValue(v);
-    // }
-    editor.setValue(v);
+    for (const editor of editors) {
+        editor.setValue(v);
+    }
 }
 
-// export const { layout, setValue } = editor;
 
-
-window.onresize = () => {
+window.addEventListener('resize', () => {
     layout();
-}
+});
+
+

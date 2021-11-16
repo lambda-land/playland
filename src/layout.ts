@@ -2,7 +2,7 @@
 import { GoldenLayout } from 'golden-layout';
 import { LayoutConfig } from 'golden-layout';
 import { flattenDiagnosticMessageText, setSourceMapRange } from 'typescript';
-import { setup, layout, setValue } from './editor';
+import { setup, setValue } from './editor';
 
 export const config: LayoutConfig = {
   root: {
@@ -24,6 +24,9 @@ declare var window: any;
 
 let clickCount = 0;
 let win = null;
+let layout: any = null;
+
+
 export function initLayout() {
 	// const glTheme = `<link type="text/css" rel="stylesheet" href="https://golden-layout.com/files/latest/css/goldenlayout-base.css" /><link type="text/css" rel="stylesheet" href="https://golden-layout.com/files/latest/css/goldenlayout-dark-theme.css" />`;
 	// document.getElementsByTagName('head')[0].innerHTML += glTheme;
@@ -66,6 +69,8 @@ export function initLayout() {
 
 
 	gl.loadLayout(config);
+
+	layout = gl;
 }
 
 

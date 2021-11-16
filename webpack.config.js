@@ -12,12 +12,21 @@ const stylesHandler = 'style-loader';
 
 const config = {
     entry: './src/main.ts',
+    mode: 'development',
     output: {
         path: path.resolve(__dirname, 'dist'),
+        filename: 'main.js'
     },
+    devtool: 'eval-source-map',
     devServer: {
         open: true,
         host: 'localhost',
+        contentBase: path.join(__dirname, 'dist'),
+        compress: true,
+        port: 9000
+    },
+    watchOptions: {
+        ignored: /node_modules/
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -28,7 +37,7 @@ const config = {
         // Learn more about plugins from https://webpack.js.org/configuration/plugins/
     ],
     resolve: {
-        extensions: ['.tsx', '.ts', '.js','.elm'],
+        extensions: ['.tsx', '.ts', '.js', '.elm'],
     },
     module: {
         rules: [
@@ -77,8 +86,6 @@ const config = {
 module.exports = () => {
     if (isProduction) {
         config.mode = 'production';
-
-
     } else {
         config.mode = 'development';
     }
