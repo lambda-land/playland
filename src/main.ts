@@ -97,7 +97,7 @@ function setupReplEditor(editor: monaco.editor.IStandaloneCodeEditor) {
 setTimeout(() => {
     setupReplEditor(editors[1]);
 
-}, 4000);
+}, 0);
 
 
 import './styles/style.scss';

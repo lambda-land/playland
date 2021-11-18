@@ -21,9 +21,11 @@ const config = {
     devServer: {
         open: true,
         host: 'localhost',
-        contentBase: path.join(__dirname, 'dist'),
+        static: {
+            directory: path.join(__dirname, 'dist')
+        },
         compress: true,
-        port: 9000
+        port: 3000
     },
     watchOptions: {
         ignored: /node_modules/
