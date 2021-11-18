@@ -112,14 +112,14 @@ app.post('/', async (request, response) => {
     const { 'body': pkg }: { 'body': EvaluationPackage } = request;
     const { ip }: { ip: string } = request;
 
-    const resourcePath = resources.get(ip) || await mkdtemp(path.join(os.tmpdir(), `elm-`));
-    // resources.set(ip,resourcePath);
+    const resourcePath = resources.get(ip) || await mkdtemp(path.join(os.tmpdir(), `elm-sesh`));
+    resources.set(ip,resourcePath);
 
 
     // console.log('Request:', request.ip, resourcePath, pkg);
-
+    console.log('Input:', pkg.expression);
     const output = await run(pkg, resourcePath);
-    // await rmdir(resourcePath, { recursive: true })
+    //rmdir(resourcePath, { recursive: true })
     console.log('Output:', output);
     response.json({ evaluated: output });
 });

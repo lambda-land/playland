@@ -64,7 +64,7 @@ export function initLayout() {
 		const [el,htmlEl] = renderHTML(`<div id="eval-container" style="height:100%;"></div>`);
 		container.element.appendChild(el);
 		const htmlElem: HTMLElement = htmlEl as HTMLElement;
-		setup(htmlElem, { 'readOnly': true });
+		setup(htmlElem, { 'readOnly': false });
 	});
 
 

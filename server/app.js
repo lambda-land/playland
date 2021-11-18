@@ -161,16 +161,19 @@ app.post('/', function (request, response) { return __awaiter(void 0, void 0, vo
                 ip = request.ip;
                 _a = resources.get(ip);
                 if (_a) return [3 /*break*/, 2];
-                return [4 /*yield*/, (0, promises_1.mkdtemp)(path.join(os.tmpdir(), "elm-"))];
+                return [4 /*yield*/, (0, promises_1.mkdtemp)(path.join(os.tmpdir(), "elm-sesh"))];
             case 1:
                 _a = (_b.sent());
                 _b.label = 2;
             case 2:
                 resourcePath = _a;
+                resources.set(ip, resourcePath);
+                // console.log('Request:', request.ip, resourcePath, pkg);
+                console.log('Input:', pkg.expression);
                 return [4 /*yield*/, run(pkg, resourcePath)];
             case 3:
                 output = _b.sent();
-                // await rmdir(resourcePath, { recursive: true })
+                //rmdir(resourcePath, { recursive: true })
                 console.log('Output:', output);
                 response.json({ evaluated: output });
                 return [2 /*return*/];
