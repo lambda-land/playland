@@ -3,3 +3,4 @@ node_modules/
 yarn-error.log
 elm-stuff/
 dist/
+.DS_Store

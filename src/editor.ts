@@ -1,7 +1,3 @@
-import { Elm } from './Main.elm';
-
-Elm.Main.init({ node: document.getElementById('elm') });
-
 
 import 'monaco-editor/esm/vs/editor/browser/controller/coreCommands.js';
 // import 'monaco-editor/esm/vs/editor/browser/widget/codeEditorWidget.js';
@@ -56,6 +52,7 @@ import 'monaco-editor/esm/vs/editor/contrib/find/findController.js';
 // import 'monaco-editor/esm/vs/editor/standalone/browser/referenceSearch/standaloneReferenceSearch.js';
 // import 'monaco-editor/esm/vs/editor/standalone/browser/toggleHighContrast/toggleHighContrast.js';
 // END_FEATURES
+
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 // (2) Desired languages:
@@ -86,7 +83,7 @@ import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 // import 'monaco-editor/esm/vs/basic-languages/html/html.contribution.js';
 // import 'monaco-editor/esm/vs/basic-languages/ini/ini.contribution.js';
 // import 'monaco-editor/esm/vs/basic-languages/java/java.contribution.js';
-import 'monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution.js';
+// import 'monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution.js';
 // import 'monaco-editor/esm/vs/basic-languages/julia/julia.contribution.js';
 // import 'monaco-editor/esm/vs/basic-languages/kotlin/kotlin.contribution.js';
 // import 'monaco-editor/esm/vs/basic-languages/less/less.contribution.js';
@@ -107,14 +104,14 @@ import 'monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution.
 // import 'monaco-editor/esm/vs/basic-languages/powerquery/powerquery.contribution.js';
 // import 'monaco-editor/esm/vs/basic-languages/powershell/powershell.contribution.js';
 // import 'monaco-editor/esm/vs/basic-languages/pug/pug.contribution.js';
-import 'monaco-editor/esm/vs/basic-languages/python/python.contribution.js';
+// import 'monaco-editor/esm/vs/basic-languages/python/python.contribution.js';
 // import 'monaco-editor/esm/vs/basic-languages/r/r.contribution.js';
 // import 'monaco-editor/esm/vs/basic-languages/razor/razor.contribution.js';
 // import 'monaco-editor/esm/vs/basic-languages/redis/redis.contribution.js';
 // import 'monaco-editor/esm/vs/basic-languages/redshift/redshift.contribution.js';
 // import 'monaco-editor/esm/vs/basic-languages/restructuredtext/restructuredtext.contribution.js';
 // import 'monaco-editor/esm/vs/basic-languages/ruby/ruby.contribution.js';
-import 'monaco-editor/esm/vs/basic-languages/rust/rust.contribution.js';
+// import 'monaco-editor/esm/vs/basic-languages/rust/rust.contribution.js';
 // import 'monaco-editor/esm/vs/basic-languages/sb/sb.contribution.js';
 // import 'monaco-editor/esm/vs/basic-languages/scala/scala.contribution.js';
 // import 'monaco-editor/esm/vs/basic-languages/scheme/scheme.contribution.js';
@@ -134,27 +131,74 @@ import 'monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution.
 // import 'monaco-editor/esm/vs/basic-languages/yaml/yaml.contribution.js';
 // END_LANGUAGES
 
-self.MonacoEnvironment = {
-	getWorkerUrl: function (moduleId, label) {
-		// if (label === 'json') {
-		// 	return './json.worker.bundle.js';
-		// }
-		// if (label === 'css' || label === 'scss' || label === 'less') {
-		// 	return './css.worker.bundle.js';
-		// }
-		// if (label === 'html' || label === 'handlebars' || label === 'razor') {
-		// 	return './html.worker.bundle.js';
-		// }
-		// if (label === 'typescript' || label === 'javascript') {
-		// 	return './ts.worker.bundle.js';
-		// }
-		return './editor.worker.bundle.js';
-	}
-};
+type Pair<T,U>=[T,U];
 
-monaco.editor.create(document.getElementById('container'), {
-	value: [
-        'type Option<T> = Some<T> | None<T>;'
-	].join('\n'),
-	language: 'typescript'
+export let editors: monaco.editor.IStandaloneCodeEditor[] = [];//: Pair<monaco.editor.IStandaloneCodeEditor,monaco.editor.ITextModel>[]= [];
+
+// declare let self: any;
+// let MonacoEnvironment;
+export function setup(node: HTMLElement, editorOptions={}) {
+    // monaco.languages.typescript.typescriptDefaults.setEagerModelSync;
+    // MonacoEnvironment = {
+    //     getWorkerUrl: function (moduleId, label) {
+    //         // if (label === 'json') {
+    //         // 	return './json.worker.bundle.js';
+    //         // }
+    //         // if (label === 'css' || label === 'scss' || label === 'less') {
+    //         // 	return './css.worker.bundle.js';
+    //         // }
+    //         // if (label === 'html' || label === 'handlebars' || label === 'razor') {
+    //         // 	return './html.worker.bundle.js';
+    //         // }
+    //         // if (label === 'typescript' || label === 'javascript') {
+    //         // 	return './ts.worker.bundle.js';
+    //         // }
+    //         return './editor.worker.bundle.js';
+    //     }
+    // };
+    // monaco.editor.create(document.getElementById('editor'), {
+    //     value: [
+    //         'type Option<T> = Some<T> | None<T>;'
+    //     ].join('\n'),
+    //     language: 'typescript'
+    // });
+    // const model = monaco.editor.createModel('type Option<T> = Some<T> | None<T>;','typescript');
+    const options = {
+        value: [
+`
+h = 1
+`
+        ].join('\n'),
+        language: 'typescript',
+        theme: 'vs-dark',
+        automaticLayout: true,
+        // readOnly: false,
+        ...editorOptions
+    };
+    const editor = monaco.editor.create(node, options);
+
+    // editor.setModel(model);
+    // editors.push([editor,0]);
+    editors.push(editor);
+
+    return node;
+}
+
+
+export function layout() {
+    for (const editor of editors) {
+        editor.layout();
+    }
+}
+export function setValue(v: string) {
+    for (const editor of editors) {
+        editor.setValue(v);
+    }
+}
+
+
+window.addEventListener('resize', () => {
+    layout();
 });
+
+
