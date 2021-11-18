@@ -1,0 +1,20 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "main": "app.ts",
+  "license": "undefined",
+  "private": true,
+  "scripts": {
+    "start": "tsc app.ts && node app.js; rm app.js || echo 1",
+    "watch": "nodemon --watch app.ts -x \"yarn run start\""
+  },
+  "dependencies": {
+    "@types/express": "^4.17.13",
+    "@types/node": "^16.11.7",
+    "express": "^4.17.1",
+    "ts-node": "^10.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
