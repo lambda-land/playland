@@ -1,6 +1,6 @@
 import { Elm } from './Main.elm';
 // import qs from 'qs';
-Elm.Main.init({ node: document.getElementById('elm') });
+const elm = Elm.Main.init({ node: document.getElementById('elm') });
 
 // import { setup } from './editor';
 
@@ -59,13 +59,18 @@ function setupReplEditor(editor: monaco.editor.IStandaloneCodeEditor) {
         if (event.keyCode == 3) {
             const prevContents = editor.getValue();
             const source = editors[0].getValue();
+
             const pkg = {
                 'language': 'elm',
                 'source': source
             }
+
             // const evalExpressionLength = prevContents.length - lastEvalEditorState.length;
             const evalExpression = prevContents.substring(lastEvalEditorState.length, prevContents.length)
             const evalPackage = {...pkg, expression: evalExpression /*pkg.source.split('\n').at(-1)*/ };
+            
+            elm.ports.evaluationReceiver.send(evalExpression);
+            
             let failedCount = 1;
             axios.post('http://localhost:9000', evalPackage)
                 .then(res => {
@@ -98,6 +103,10 @@ setTimeout(() => {
     setupReplEditor(editors[1]);
 
 }, 0);
+
+elm.ports.evaluateExpression.subscribe((expression: string) => {
+    console.log('Evaluated from Elm', expression);
+});
 
 
 import './styles/style.scss';
