@@ -12,9 +12,11 @@
     "axios": "^0.24.0",
     "base-64": "^1.0.0",
     "elm": "^0.19.1-5",
+    "elm-ts-interop": "^0.0.8",
     "elm-webpack-loader": "^8.0.0",
     "golden-layout": "^2.4.0",
     "monaco-editor": "^0.29.1",
+    "monaco-themes": "^0.4.0",
     "qs": "^6.10.1",
     "typesafe-storage": "^1.0.9"
   },
@@ -41,6 +43,8 @@
     "build:dev": "webpack --mode=development",
     "build:prod": "webpack --mode=production --node-env=production",
     "watch": "webpack --watch --config webpack.config.js",
-    "serve": "webpack serve"
+    "serve": "webpack serve",
+    "elm-ts-interop-compile": "elm-ts-interop --output src/types/ts/interop.elm.d.ts --definition-dir src/types/elm/",
+    "elm-ts-interop-compile:watch": "elm-ts-interop --output src/types/ts/interop.elm.d.ts --definition-dir src/types/elm/"
   }
 }

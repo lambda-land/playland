@@ -2,6 +2,8 @@ import { Elm } from './Main.elm';
 // import qs from 'qs';
 const elm = Elm.Main.init({ node: document.getElementById('elm') });
 
+import * as hooks from './hooks';
+
 // import { setup } from './editor';
 
 import { initLayout } from './layout';
@@ -101,7 +103,6 @@ function setupReplEditor(editor: monaco.editor.IStandaloneCodeEditor) {
 
 setTimeout(() => {
     setupReplEditor(editors[1]);
-
 }, 0);
 
 elm.ports.evaluateExpression.subscribe((expression: string) => {

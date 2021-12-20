@@ -131,6 +131,14 @@ import 'monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution.
 // import 'monaco-editor/esm/vs/basic-languages/yaml/yaml.contribution.js';
 // END_LANGUAGES
 
+import monokai from 'monaco-themes/themes/Monokai.json';
+monaco.editor.defineTheme('monokai', monokai as monaco.editor.IStandaloneThemeData);
+
+import complete_dark from './styles/editor-themes/complete-dark.json';
+// import * as monacoThemes from 'monaco-themes';
+// const { parseTmTheme } = require('monaco-themes');
+// monaco.editor.defineTheme('complete-dark', parseTmTheme(JSON.stringify(complete_dark)) as monaco.editor.IStandaloneThemeData);
+
 type Pair<T,U>=[T,U];
 
 export let editors: monaco.editor.IStandaloneCodeEditor[] = [];//: Pair<monaco.editor.IStandaloneCodeEditor,monaco.editor.ITextModel>[]= [];
@@ -170,7 +178,7 @@ h = 1
 `
         ].join('\n'),
         language: 'typescript',
-        theme: 'vs-dark',
+        theme: 'monokai', // 'vs-dark'
         automaticLayout: true,
         // readOnly: false,
         ...editorOptions

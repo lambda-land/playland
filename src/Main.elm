@@ -1,5 +1,5 @@
-port module Main exposing (main)
-
+port module Main exposing (..)
+-- import PlyLnd
 import Browser
 import Html exposing (Html, button, div, text)
 import Html.Events exposing (onClick)
@@ -11,17 +11,22 @@ main = Browser.element
   { init = init
   , update = update
   , view = view
-  ,subscriptions = subscriptions }
+  , subscriptions = subscriptions }
 
--- Initial model
 type alias Model = Int
--- init : Model
-init _ = (0,Cmd.none)
+
+type alias Flags = ()
 
 type Msg 
   = Increment 
   | Decrement
   | EvalExpr String
+
+
+-- Initial model
+-- init : Model
+init : Flags -> (Model,Cmd Msg)
+init _ = (0,Cmd.none)
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
