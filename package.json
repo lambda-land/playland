@@ -44,7 +44,7 @@
     "build:prod": "webpack --mode=production --node-env=production",
     "watch": "webpack --watch --config webpack.config.js",
     "serve": "webpack serve",
-    "elm-ts-interop-compile": "elm-ts-interop --output src/types/ts/interop.elm.d.ts --definition-dir src/types/elm/",
-    "elm-ts-interop-compile:watch": "elm-ts-interop --output src/types/ts/interop.elm.d.ts --definition-dir src/types/elm/"
+    "elm-ts-interop-compile": "elm-ts-interop --output src/Main.elm.d.ts --definition-dir src/types/elm/",
+    "elm-ts-interop-compile:watch": "elm-ts-interop --output src/Main.elm.d.ts --definition-dir src/types/elm/ --watch"
   }
 }

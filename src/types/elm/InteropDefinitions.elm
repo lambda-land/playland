@@ -19,15 +19,21 @@ interop =
 
 type FromElm
     = Alert String
+    | Display String 
+    | Log String
 
 
 type ToElm
-    = AuthenticatedUser User
+  = AuthenticatedUser User
+  | EvaluationRequest EvalPackage 
+  | EvaluationResponse String
 
-
-type alias User =
-    { username : String }
-
+type alias User 
+  = { username : String }
+type alias EvalPackage = 
+  { source : String
+  , expr : String
+  }
 
 type alias Flags =
     {}
@@ -36,27 +42,50 @@ type alias Flags =
 fromElm : Encoder FromElm
 fromElm =
     TsEncode.union
-        (\vAlert value ->
+        (\vAlert vDisplay vLog value ->
             case value of
-                Alert string ->
-                    vAlert string
+                Alert string -> vAlert string
+                Display string -> vDisplay string
+                Log string -> vLog string
         )
-        |> TsEncode.variantTagged "alert"
-            (TsEncode.object [ required "message" identity TsEncode.string ])
+        |> TsEncode.variantTagged "alert" 
+          (TsEncode.object [ required "message" identity TsEncode.string ])
+        |> TsEncode.variantTagged "display"
+          (TsEncode.object [ required "message" identity TsEncode.string ])
+        |> TsEncode.variantTagged "log"
+          (TsEncode.object [ required "message" identity TsEncode.string ])
         |> TsEncode.buildUnion
 
 
 toElm : Decoder ToElm
 toElm =
-    TsDecode.discriminatedUnion "tag"
-        [ ( "authenticatedUser"
-          , TsDecode.map AuthenticatedUser
-                (TsDecode.map User
-                    (TsDecode.field "username" TsDecode.string)
-                )
-          )
-        ]
+    TsDecode.discriminatedUnion "tag" toElmDecoders
+        -- [ ("authenticatedUser"
+        --   , TsDecode.map AuthenticatedUser 
+        --       (TsDecode.map User (TsDecode.field "username" TsDecode.string))
+        --   )
+        -- ]
 
+-- decodeRecord : List (String,Decoder t) -> (rec -> obj) -> Decoder obj
+-- decodeRecord fields cons = List.foldl (\) TsDecode.succeed cons 
+
+toElmDecoders : List (String,Decoder ToElm)
+toElmDecoders = 
+  [ ( "evaluateExpression"
+    , TsDecode.succeed EvalPackage
+        |> TsDecode.andMap (TsDecode.field "source" TsDecode.string)
+        |> TsDecode.andMap (TsDecode.field "expr" TsDecode.string)
+        |> TsDecode.map EvaluationRequest
+    )
+  , ( "evaluationResponse"
+    , TsDecode.map EvaluationResponse (TsDecode.field "value" TsDecode.string)
+    )
+  , ( "authenticatedUser"
+    , TsDecode.succeed User
+        |> TsDecode.andMap (TsDecode.field "username" TsDecode.string)
+        |> TsDecode.map AuthenticatedUser 
+    )
+  ]
 
 flags : Decoder Flags
 flags =

@@ -21,9 +21,9 @@ export interface ElmApp {
   };
 }
 
-export type FromElm = { data : { message : string }; tag : "alert" };
+export type FromElm = { data : { message : string }; tag : "log" } | { data : { message : string }; tag : "display" } | { data : { message : string }; tag : "alert" };
 
-export type ToElm = { tag : "authenticatedUser"; username : string };
+export type ToElm = { expr : string; source : string; tag : "evaluateExpression" } | { tag : "evaluationResponse"; value : string } | { tag : "authenticatedUser"; username : string };
 
 export type Flags = null;
 
