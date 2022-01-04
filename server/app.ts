@@ -61,14 +61,14 @@ const run = async ({ source, expression }: EvaluationPackage, folder: string) =>
             if (done) { res(0); return; }
             const dat = data.toString();
             output.push(dat);
-            // console.log('Data Out: ', dat);
+            console.log('Data Out: ', dat);
             if (instructions.length > 0) {
                 const next = instructions.shift();
                 elmProcess.stdin.write(next);
             } else {
-                elmProcess.stdin.end();
-                elmProcess.kill();
-                // console.warn('killed');
+                
+                setTimeout(() => {elmProcess.stdin.end();elmProcess.kill();
+                console.warn('killed');},10);
                 done = true;
             }
         });
@@ -103,7 +103,9 @@ const run = async ({ source, expression }: EvaluationPackage, folder: string) =>
     // elmProcess.kill();
 
     // console.log(output, 'exit code:', exitCode);
-    return `${output[output.length-1]}`.trim();
+    const ret = `${output[output.length-1]}`.trim();
+    console.log('Ret', ret);
+    return ret;
 };
 
 const resources = new Map<string,string>();
@@ -112,7 +114,7 @@ app.post('/', async (request, response) => {
     const { 'body': pkg }: { 'body': EvaluationPackage } = request;
     const { ip }: { ip: string } = request;
 
-    const resourcePath = resources.get(ip) || await mkdtemp(path.join(os.tmpdir(), `elm-sesh`));
+    const resourcePath = resources.get(ip) || await mkdtemp(path.join(os.tmpdir(), `e-elm-sesh`));
     resources.set(ip,resourcePath);
 
 

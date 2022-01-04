@@ -74,11 +74,11 @@ app.use(function (req, res, next) {
 var run = function (_a, folder) {
     var source = _a.source, expression = _a.expression;
     return __awaiter(void 0, void 0, void 0, function () {
-        var contents, elmProcess, output, instructions, done, code;
+        var contents, elmProcess, output, instructions, done, code, ret;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
-                    contents = "module Program exposing (..)\n" + source + "\nexpr=" + expression + "\n";
+                    contents = "module Program exposing (..)\n".concat(source, "\nexpr=").concat(expression, "\n");
                     return [4 /*yield*/, (0, promises_1.writeFile)(path.join(folder, 'Program.elm'), contents)];
                 case 1:
                     _b.sent();
@@ -106,47 +106,26 @@ var run = function (_a, folder) {
                                 }
                                 var dat = data.toString();
                                 output.push(dat);
-                                // console.log('Data Out: ', dat);
+                                console.log('Data Out: ', dat);
                                 if (instructions.length > 0) {
                                     var next = instructions.shift();
                                     elmProcess.stdin.write(next);
                                 }
                                 else {
-                                    elmProcess.stdin.end();
-                                    elmProcess.kill();
-                                    // console.warn('killed');
+                                    setTimeout(function () {
+                                        elmProcess.stdin.end();
+                                        elmProcess.kill();
+                                        console.warn('killed');
+                                    }, 10);
                                     done = true;
                                 }
                             });
                         })];
                 case 3:
                     code = _b.sent();
-                    // const writes = instructions.map(inst => new Promise(
-                    //     (res,rej) => elmProcess.stdin.write(inst + '\n', res)));
-                    // for (const write of writes) {
-                    //     await write;
-                    // }
-                    // const writes = instructions.map(inst => elmProcess.stdin.write(inst));
-                    // for (const inst of instructions) {
-                    //     await new Promise((res,rej) => {
-                    //         elmProcess.stdin.write(inst + '\n', () => {
-                    //             console.log('written', inst);
-                    //             res(null);
-                    //         });
-                    //     });
-                    // }
-                    // elmProcess.stdin.end();
-                    // elmProcess.kill();
-                    // const exitCode = await new Promise((resolve,reject) => {
-                    //     elmProcess.on('close', resolve);
-                    //     elmProcess.kill('SIGINT');
-                    // })
-                    // await rmdir(folder, { recursive: true });
-                    // })
-                    // elmProcess.stdin.end();
-                    // elmProcess.kill();
-                    // console.log(output, 'exit code:', exitCode);
-                    return [2 /*return*/, ("" + output[output.length - 1]).trim()];
+                    ret = "".concat(output[output.length - 1]).trim();
+                    console.log('Ret', ret);
+                    return [2 /*return*/, ret];
             }
         });
     });
@@ -161,7 +140,7 @@ app.post('/', function (request, response) { return __awaiter(void 0, void 0, vo
                 ip = request.ip;
                 _a = resources.get(ip);
                 if (_a) return [3 /*break*/, 2];
-                return [4 /*yield*/, (0, promises_1.mkdtemp)(path.join(os.tmpdir(), "elm-sesh"))];
+                return [4 /*yield*/, (0, promises_1.mkdtemp)(path.join(os.tmpdir(), "e-elm-sesh"))];
             case 1:
                 _a = (_b.sent());
                 _b.label = 2;
@@ -198,7 +177,7 @@ function test() {
                     ip = '6969696';
                     _a = resources.get(ip);
                     if (_a) return [3 /*break*/, 3];
-                    return [4 /*yield*/, (0, promises_1.mkdtemp)(path.join(os.tmpdir(), "playland-" + ip + "-"))];
+                    return [4 /*yield*/, (0, promises_1.mkdtemp)(path.join(os.tmpdir(), "playland-".concat(ip, "-")))];
                 case 2:
                     _a = (_c.sent());
                     _c.label = 3;
