@@ -44,7 +44,7 @@ function setupReplEditor(editor: monaco.editor.IStandaloneCodeEditor) {
             });
             
             let failedCount = 1;
-            axios.post('http://localhost:9000', evalPackage)
+            axios.post('http://35.87.26.147:8080/', evalPackage)
                 .then(res => {
                     const data = res.data;
                     console.log(data);
