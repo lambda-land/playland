@@ -44,7 +44,7 @@ function setupReplEditor(editor: monaco.editor.IStandaloneCodeEditor) {
             });
             
             let failedCount = 1;
-            axios.post('http://35.87.26.147:8080/', evalPackage)
+            axios.post('https://playland.grape-juice.org/', evalPackage)
                 .then(res => {
                     const data = res.data;
                     console.log(data);
