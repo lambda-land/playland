@@ -174,7 +174,17 @@ export function setup(node: HTMLElement, editorOptions={}) {
     const options = {
         value: [
 `
-h = 1
+
+add x y = x + y
+
+mul x y = x * y
+
+inc = add 1
+
+fib n = if n < 2 then 1 else (fib (n - 2)) + (fib (n - 1))
+
+fibs = [fib 1,fib 2,fib 3,fib 4,fib 5,fib 6,fib 7,fib 8]
+
 `
         ].join('\n'),
         language: 'typescript',
