@@ -81,7 +81,7 @@ export function initLayout() {
 	});
 
 	gl.registerComponentFactoryFunction('topbar', (container, itemConfig) => {
-		const [el,htmlEl] = renderHTML("<div>hi</div>");
+		const [el,htmlEl] = renderHTML(`<select name="lang" id="lang"><option value="elm">elm</option></select>`);
 		container.element.appendChild(el);
 
 	});
