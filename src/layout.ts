@@ -6,15 +6,28 @@ import { setup, setValue } from './editor';
 
 export const config: LayoutConfig = {
   root: {
-    type: 'row',
+    type: 'column',
     content: [
       {
         type: 'component',
-        componentType: 'text'
+	componentType: 'topbar',
+        isClosable: false,
+	height: 5
       },
       {
-        type: 'component',
-        componentType: 'eval'
+        type: 'row',
+        content: [
+          {
+            type: 'component',
+            componentType: 'text',
+            isClosable: false
+          },
+          {
+            type: 'component',
+            componentType: 'eval',
+            isClosable: false
+          }
+        ]
       }
     ]
   }
@@ -65,6 +78,12 @@ export function initLayout() {
 		container.element.appendChild(el);
 		const htmlElem: HTMLElement = htmlEl as HTMLElement;
 		setup(htmlElem, { 'readOnly': false });
+	});
+
+	gl.registerComponentFactoryFunction('topbar', (container, itemConfig) => {
+		const [el,htmlEl] = renderHTML("<div>hi</div>");
+		container.element.appendChild(el);
+
 	});
 
 
