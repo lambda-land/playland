@@ -145,7 +145,7 @@ export let editors: monaco.editor.IStandaloneCodeEditor[] = [];//: Pair<monaco.e
 
 // declare let self: any;
 // let MonacoEnvironment;
-export function setup(node: HTMLElement, editorOptions={}) {
+export function setup(node: HTMLElement, editorOptions={},defaultSource: string | null = null) {
     // monaco.languages.typescript.typescriptDefaults.setEagerModelSync;
     // MonacoEnvironment = {
     //     getWorkerUrl: function (moduleId, label) {
@@ -172,7 +172,7 @@ export function setup(node: HTMLElement, editorOptions={}) {
     // });
     // const model = monaco.editor.createModel('type Option<T> = Some<T> | None<T>;','typescript');
     const options = {
-        value: [
+        value: [ (defaultSource != null ? defaultSource :
 `
 
 add x y = x + y
@@ -185,7 +185,7 @@ fib n = if n < 2 then 1 else (fib (n - 2)) + (fib (n - 1))
 
 fibs = [fib 1,fib 2,fib 3,fib 4,fib 5,fib 6,fib 7,fib 8]
 
-`
+`)
         ].join('\n'),
         language: 'typescript',
         theme: 'monokai', // 'vs-dark'

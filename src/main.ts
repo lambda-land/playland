@@ -19,6 +19,8 @@ import axios, { Axios } from 'axios';
 import { editors } from './editor';
 import { encode } from 'base-64';
 
+import { storage } from './storage';
+
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 let lastEvalEditorState = '> ';
 function setupReplEditor(editor: monaco.editor.IStandaloneCodeEditor) {
@@ -42,7 +44,9 @@ function setupReplEditor(editor: monaco.editor.IStandaloneCodeEditor) {
                 source: source,
                 expr: evalExpression
             });
-            
+
+            storage.setItem('session-editor',{ source });
+
             let failedCount = 1;
             axios.post('https://playland.grape-juice.org/', evalPackage)
                 .then(res => {
@@ -78,6 +82,10 @@ function setupReplEditor(editor: monaco.editor.IStandaloneCodeEditor) {
 
 setTimeout(() => {
     setupReplEditor(editors[1]);
+    if (storage.getItem('session-editor')) {
+        const { source } = storage.getItem('session-editor');
+        editors[0].setValue(source);
+    }
 }, 0);
 
 // elm.ports.evaluateExpression.subscribe((expression: string) => {
