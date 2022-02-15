@@ -36,15 +36,15 @@ function setupReplEditor(editor: monaco.editor.IStandaloneCodeEditor) {
             // const evalExpressionLength = prevContents.length - lastEvalEditorState.length;
             const evalExpression = prevContents.substring(lastEvalEditorState.length, prevContents.length)
             const evalPackage = {...pkg, expression: evalExpression /*pkg.source.split('\n').at(-1)*/ };
-            
-            elm.ports.interopToElm.send({
+            console.log(evalPackage)
+	    elm.ports.interopToElm.send({
                 tag: "evaluateExpression",
                 source: source,
                 expr: evalExpression
             });
             
             let failedCount = 1;
-            axios.post('http://localhost:9000', evalPackage)
+            axios.post('http://localhost:9000/eval', evalPackage)
                 .then(res => {
                     const data = res.data;
                     console.log(data);
