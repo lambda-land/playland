@@ -23,12 +23,18 @@ import { storage } from './storage';
 
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 let lastEvalEditorState = '> ';
+let lastEditorState = lastEvalEditorState;
+let immutableEditorContext = lastEvalEditorState;
+let ignoreInput = false;
 function setupReplEditor(editor: monaco.editor.IStandaloneCodeEditor) {
     editor.setValue(lastEvalEditorState);
     editor.onKeyDown(event => {
+
         if (event.keyCode == 3) {
             const prevContents = editor.getValue();
             const source = editors[0].getValue();
+
+            setTimeout( () => editor.updateOptions({ readOnly: true, theme: 'vs-dark' }), 0);
 
             const pkg = {
                 'language': 'elm',
@@ -48,15 +54,24 @@ function setupReplEditor(editor: monaco.editor.IStandaloneCodeEditor) {
             storage.setItem('session-editor',{ source });
 
             let failedCount = 1;
-            axios.post('https://playland.grape-juice.org/', evalPackage)
+            // axios.post('https://playland.grape-juice.org/', evalPackage)
+            axios.post('http://localhost:9000/', evalPackage)
+
                 .then(res => {
+                    editor.updateOptions({ readOnly: false });
+
                     const data = res.data;
                     console.log(data);
                     const { lineNumber, column } = editor.getPosition();
                     editor.setValue(prevContents + '\n' + data['evaluated'] + '\n> ');
                     editor.setPosition({ lineNumber: lineNumber + 1, column: 3 });
                     lastEvalEditorState = editor.getValue();
-                    
+
+                    lastEditorState = lastEvalEditorState;
+                    immutableEditorContext = lastEvalEditorState;
+
+                    ignoreInput = false;
+
                     elm.ports.interopToElm.send({
                         tag: "evaluationResponse",
                         value: data['evaluated']
@@ -67,17 +82,23 @@ function setupReplEditor(editor: monaco.editor.IStandaloneCodeEditor) {
                     editor.setValue(`(${failedCount}) `+'Endpoint failed to respond.');
                     failedCount += 1;
                 });
-        }
-        if (event.keyCode == 1) {
+        } else if (event.keyCode === 1) {
             const prevContents = editor.getValue();
             const { lineNumber, column } = editor.getPosition();
-            new Promise((res,rej) => {
-                editor.setValue(lastEvalEditorState);
-                editor.setPosition({ lineNumber: lineNumber, column: 3 })
-                res(true);
-            });
+            if (column < 4) {
+                new Promise((res,rej) => {
+                    const next = immutableEditorContext;
+                    editor.setValue(next + ' ');
+                    editor.setPosition({ lineNumber: lineNumber, column: 4 });
+                    res(true);
+                });
+                return;
+            }
         }
     })
+    // editor.onKeyUp(event => {
+    //     lastEditorState = editor.getValue();
+    // })
 }
 
 setTimeout(() => {
@@ -103,4 +124,7 @@ elm.ports.interopFromElm.subscribe(fromElm => {
 })
 
 import './styles/style.scss';
+
+// setTimeout(() => editors[0].updateOptions({ readOnly: true, theme: 'monokai' }), 100);
 // import 'golden-layout/dist/less/'
+(window as any).editors = editors

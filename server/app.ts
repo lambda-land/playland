@@ -9,6 +9,7 @@ import { writeFile, rm, rmdir, mkdtemp, readFile } from 'fs/promises';
 
 import * as express from 'express';
 import * as e from 'express';
+import { rmdirSync, rmSync } from 'fs';
 const app = express();
 const port = 9000 || process.env.PORT;
 
@@ -66,9 +67,18 @@ const run = async ({ source, expression }: EvaluationPackage, folder: string) =>
                 const next = instructions.shift();
                 elmProcess.stdin.write(next);
             } else {
-                
-                setTimeout(() => {elmProcess.stdin.end();elmProcess.kill();
-                console.warn('killed');},10);
+                // elmProcess.stdin.end();
+                // elmProcess.kill();
+                // console.warn('killed');
+                setTimeout(() => {
+                    elmProcess.stdin.end();
+                    elmProcess.kill();
+                    console.warn('killed');
+                    setTimeout( function () {
+                        rmSync(folder,{recursive:true,force:true});
+                        console.log('Removed', folder);
+                    },10);
+            },10);
                 done = true;
             }
         });
@@ -114,16 +124,24 @@ app.post('/', async (request, response) => {
     const { 'body': pkg }: { 'body': EvaluationPackage } = request;
     const { ip }: { ip: string } = request;
 
-    const resourcePath = resources.get(ip) || await mkdtemp(path.join(os.tmpdir(), `e-elm-sesh`));
+    // const resourcePath = resources.get(ip) || await mkdtemp(path.join(os.tmpdir(), `e-elm-sesh`));
+    // resources.set(ip,resourcePath);
+    const resourcePath = await mkdtemp(path.join(os.tmpdir()));
     resources.set(ip,resourcePath);
-
 
     // console.log('Request:', request.ip, resourcePath, pkg);
     console.log('Input:', pkg.expression);
     const output = await run(pkg, resourcePath);
-    //rmdir(resourcePath, { recursive: true })
+    // rmdir(resourcePath, { recursive: true });
     console.log('Output:', output);
     response.json({ evaluated: output });
+    // setTimeout((function () {
+    //     const rmrf = spawn('rm', ['-rf', resourcePath]);
+    //     rmrf.stdin.end();
+    //     rmrf.kill();
+    //     console.log('Removed', resourcePath);
+    // }).bind(resourcePath),20);
+    
 });
 
 async function test() {
@@ -134,9 +152,11 @@ async function test() {
     };
     const ip = '6969696';
 
-    const resourcePath = resources.get(ip) || await mkdtemp(path.join(os.tmpdir(), `playland-${ip}-`));
+    // const resourcePath = resources.get(ip) || await mkdtemp(path.join(os.tmpdir(), `playland-${ip}-`));
+    // resources.set(ip,resourcePath);
+    const resourcePath = await mkdtemp(path.join(os.tmpdir()));
     resources.set(ip,resourcePath);
-    
+
     const output = await run(pkg, resourcePath);
     console.log(output);
 }
