@@ -60,7 +60,6 @@ function setupReplEditor(editor: monaco.editor.IStandaloneCodeEditor) {
             // const evalExpressionLength = prevContents.length - lastEvalEditorState.length;
             const evalExpression = prevContents.substring(lastEvalEditorState.length, prevContents.length)
             const evalPackage = { ...pkg, expression: evalExpression /*pkg.source.split('\n').at(-1)*/ };
-
             elm.ports.interopToElm.send({
                 tag: "evaluateExpression",
                 source: source,
@@ -73,8 +72,7 @@ function setupReplEditor(editor: monaco.editor.IStandaloneCodeEditor) {
 
             let failedCount = 1;
             // axios.post('https://playland.grape-juice.org/', evalPackage)
-            axios.post('http://localhost:9000/', evalPackage)
-
+            axios.post('http://localhost:9000/eval', evalPackage)
                 .then(res => {
                     editor.updateOptions({ readOnly: false });
 
@@ -142,7 +140,6 @@ elm.ports.interopFromElm.subscribe(fromElm => {
 })
 
 import './styles/style.scss';
-
 // setTimeout(() => editors[1].updateOptions({ readOnly: true, theme: 'monokai' }), 100);
 // import 'golden-layout/dist/less/'
 (window as any).editors = editors
