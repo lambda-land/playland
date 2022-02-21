@@ -7,6 +7,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const isProduction = process.env.NODE_ENV == 'production';
 
+const elmDebug = false;
 
 const stylesHandler = 'style-loader';
 
@@ -54,6 +55,8 @@ const config = {
                 exclude: [/elm-stuff/, /node_modules/],
                 loader: 'elm-webpack-loader',
                 options: {
+                    optimize: true,
+                    debug: elmDebug,
                     files: [
                         path.resolve(__dirname, "src/Main.elm"),
                         // path.resolve(__dirname, "Path/To/OtherModule.elm")
@@ -90,7 +93,6 @@ const config = {
         ],
     },
 };
-
 module.exports = () => {
     if (isProduction) {
         config.mode = 'production';
