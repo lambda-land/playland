@@ -28,13 +28,29 @@ let immutableEditorContext = lastEvalEditorState;
 let ignoreInput = false;
 function setupReplEditor(editor: monaco.editor.IStandaloneCodeEditor) {
     editor.setValue(lastEvalEditorState);
+    editor.updateOptions({
+        minimap: {enabled : false},
+        lineNumbers: 'off',
+        // theme: 'hc-black'
+    });
+    const container = (document as any).getElementById('eval-container')
+    // container.style.cssText += 'background-color: #1a2e34 !important;';
+    // container.querySelector('.monaco-editor').style.backgroundColor = '#1a2e34';
+    const backgrounds = [...container.querySelectorAll('.monaco-editor-background'),...container.querySelectorAll('.monaco-editor'),...container.querySelectorAll('.margin')]
+    for (const bg of backgrounds) {
+        bg.style.backgroundColor = '#1a2e34';
+        bg.style.cssText += 'background-color: #1a2e34 !important;';
+    }
+    for (const vl of container.querySelectorAll('.monaco-editor-background')) {
+        vl.style.cssText += 'background-color: #1a2e34 !important;';
+    }
     editor.onKeyDown(event => {
 
         if (event.keyCode == 3) {
             const prevContents = editor.getValue();
             const source = editors[0].getValue();
 
-            setTimeout( () => editor.updateOptions({ readOnly: true, theme: 'vs-dark' }), 0);
+            setTimeout(() => editor.updateOptions({ readOnly: true, theme: 'vs-dark' }), 0);
 
             const pkg = {
                 'language': 'elm',
@@ -43,15 +59,17 @@ function setupReplEditor(editor: monaco.editor.IStandaloneCodeEditor) {
 
             // const evalExpressionLength = prevContents.length - lastEvalEditorState.length;
             const evalExpression = prevContents.substring(lastEvalEditorState.length, prevContents.length)
-            const evalPackage = {...pkg, expression: evalExpression /*pkg.source.split('\n').at(-1)*/ };
-            
+            const evalPackage = { ...pkg, expression: evalExpression /*pkg.source.split('\n').at(-1)*/ };
+
             elm.ports.interopToElm.send({
                 tag: "evaluateExpression",
                 source: source,
                 expr: evalExpression
             });
 
-            storage.setItem('session-editor',{ source });
+            console.log(evalPackage)
+
+            storage.setItem('session-editor', { source });
 
             let failedCount = 1;
             // axios.post('https://playland.grape-juice.org/', evalPackage)
@@ -63,7 +81,7 @@ function setupReplEditor(editor: monaco.editor.IStandaloneCodeEditor) {
                     const data = res.data;
                     console.log(data);
                     const { lineNumber, column } = editor.getPosition();
-                    editor.setValue(prevContents + '\n' + data['evaluated'] + '\n> ');
+                    editor.setValue(prevContents + '\n' + (data['evaluated'] || data['error']) + '\n> ');
                     editor.setPosition({ lineNumber: lineNumber + 1, column: 3 });
                     lastEvalEditorState = editor.getValue();
 
@@ -79,14 +97,14 @@ function setupReplEditor(editor: monaco.editor.IStandaloneCodeEditor) {
                 })
                 .catch(res => {
                     console.error(res);
-                    editor.setValue(`(${failedCount}) `+'Endpoint failed to respond.');
+                    editor.setValue(`(${failedCount}) ` + 'Endpoint failed to respond.');
                     failedCount += 1;
                 });
         } else if (event.keyCode === 1) {
             const prevContents = editor.getValue();
             const { lineNumber, column } = editor.getPosition();
             if (column < 4) {
-                new Promise((res,rej) => {
+                new Promise((res, rej) => {
                     const next = immutableEditorContext;
                     editor.setValue(next + ' ');
                     editor.setPosition({ lineNumber: lineNumber, column: 4 });
@@ -125,6 +143,6 @@ elm.ports.interopFromElm.subscribe(fromElm => {
 
 import './styles/style.scss';
 
-// setTimeout(() => editors[0].updateOptions({ readOnly: true, theme: 'monokai' }), 100);
+// setTimeout(() => editors[1].updateOptions({ readOnly: true, theme: 'monokai' }), 100);
 // import 'golden-layout/dist/less/'
 (window as any).editors = editors

@@ -53,16 +53,41 @@ const run = async ({ source, expression }: EvaluationPackage, folder: string) =>
         // contents,
         expression,  
     ].map(inst => inst + '\n'),expression];
-    elmProcess.stderr.on('data', data => {
-        console.error(data.toString());
-    });
+    // elmProcess.stderr.on('data', data => {
+    //     console.error('Elm Error: ', data.toString());
+    // });
+    let error : null | string = null;
+
     let done = false;
     const code = await new Promise((res,rej) => {
+        elmProcess.stderr.on('data', data => {
+            if (done) { res(0); return; }
+
+            console.error('[elm.stderr.buffer]', elmProcess.stderr.toString());
+            error = data.toString('utf8');
+            console.error('[elm.stderr]', error);
+
+            setTimeout(() => {
+                elmProcess.stdin.end();
+                elmProcess.kill();
+                console.info('(killed)', path.join(folder, 'Program.elm'));
+                setTimeout( function () {
+                    rmSync(folder,{recursive:true,force:true});
+                    console.info('(removed)', folder);
+                },10);
+            },1000);
+            done = true;
+
+            res(0);
+        });
         elmProcess.stdout.on('data', data => {
             if (done) { res(0); return; }
+
             const dat = data.toString();
             output.push(dat);
-            console.log('Data Out: ', dat);
+            console.log('[elm.stdio]', dat);
+
+            // Feed in instructions until it's consumed then kill thread. 
             if (instructions.length > 0) {
                 const next = instructions.shift();
                 elmProcess.stdin.write(next);
@@ -73,12 +98,12 @@ const run = async ({ source, expression }: EvaluationPackage, folder: string) =>
                 setTimeout(() => {
                     elmProcess.stdin.end();
                     elmProcess.kill();
-                    console.warn('killed');
+                    console.info('(killed)', path.join(folder, 'Program.elm'));
                     setTimeout( function () {
                         rmSync(folder,{recursive:true,force:true});
-                        console.log('Removed', folder);
+                        console.info('(removed)', folder);
                     },10);
-            },10);
+                },10);
                 done = true;
             }
         });
@@ -113,9 +138,15 @@ const run = async ({ source, expression }: EvaluationPackage, folder: string) =>
     // elmProcess.kill();
 
     // console.log(output, 'exit code:', exitCode);
-    const ret = `${output[output.length-1]}`.trim();
-    console.log('Ret', ret);
-    return ret;
+    if (error == null) {
+        const ret = `${output[output.length-1]}`.trim();
+        console.info('(output-success)', ret);
+        return { 'evaluated' : ret };
+    } else {
+        console.error('(output-error)', error);
+        return { 'error' : error };
+    }
+    
 };
 
 const resources = new Map<string,string>();
@@ -130,11 +161,11 @@ app.post('/', async (request, response) => {
     resources.set(ip,resourcePath);
 
     // console.log('Request:', request.ip, resourcePath, pkg);
-    console.log('Input:', pkg.expression);
+    console.info('(input)', pkg.expression);
+
     const output = await run(pkg, resourcePath);
-    // rmdir(resourcePath, { recursive: true });
-    console.log('Output:', output);
-    response.json({ evaluated: output });
+    response.json({ ...output });
+    // response.json({ evaluated: output });
     // setTimeout((function () {
     //     const rmrf = spawn('rm', ['-rf', resourcePath]);
     //     rmrf.stdin.end();
@@ -144,22 +175,22 @@ app.post('/', async (request, response) => {
     
 });
 
-async function test() {
-    const pkg: EvaluationPackage = {
-        language: 'elm',
-        source: (await readFile('./TestSource.elm')).toString(),
-        expression: '1 + h'
-    };
-    const ip = '6969696';
+// async function test() {
+//     const pkg: EvaluationPackage = {
+//         language: 'elm',
+//         source: (await readFile('./TestSource.elm')).toString(),
+//         expression: '1 + h'
+//     };
+//     const ip = '6969696';
 
-    // const resourcePath = resources.get(ip) || await mkdtemp(path.join(os.tmpdir(), `playland-${ip}-`));
-    // resources.set(ip,resourcePath);
-    const resourcePath = await mkdtemp(path.join(os.tmpdir()));
-    resources.set(ip,resourcePath);
+//     // const resourcePath = resources.get(ip) || await mkdtemp(path.join(os.tmpdir(), `playland-${ip}-`));
+//     // resources.set(ip,resourcePath);
+//     const resourcePath = await mkdtemp(path.join(os.tmpdir()));
+//     resources.set(ip,resourcePath);
 
-    const output = await run(pkg, resourcePath);
-    console.log(output);
-}
+//     const output = await run(pkg, resourcePath);
+//     console.log(output);
+// }
 
 // test();
 
