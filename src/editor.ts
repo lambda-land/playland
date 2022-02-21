@@ -142,10 +142,10 @@ import complete_dark from './styles/editor-themes/complete-dark.json';
 type Pair<T,U>=[T,U];
 
 export let editors: monaco.editor.IStandaloneCodeEditor[] = [];//: Pair<monaco.editor.IStandaloneCodeEditor,monaco.editor.ITextModel>[]= [];
-
+let first = false;
 // declare let self: any;
 // let MonacoEnvironment;
-export function setup(node: HTMLElement, editorOptions={}) {
+export function setup(node: HTMLElement, editorOptions={},defaultSource: string | null = null) {
     // monaco.languages.typescript.typescriptDefaults.setEagerModelSync;
     // MonacoEnvironment = {
     //     getWorkerUrl: function (moduleId, label) {
@@ -172,7 +172,7 @@ export function setup(node: HTMLElement, editorOptions={}) {
     // });
     // const model = monaco.editor.createModel('type Option<T> = Some<T> | None<T>;','typescript');
     const options = {
-        value: [
+        value: [ (defaultSource != null ? defaultSource :
 `
 
 add x y = x + y
@@ -185,14 +185,15 @@ fib n = if n < 2 then 1 else (fib (n - 2)) + (fib (n - 1))
 
 fibs = [fib 1,fib 2,fib 3,fib 4,fib 5,fib 6,fib 7,fib 8]
 
-`
+`)
         ].join('\n'),
         language: 'typescript',
-        theme: 'monokai', // 'vs-dark'
+        theme: 'vs-dark',
         automaticLayout: true,
         // readOnly: false,
         ...editorOptions
     };
+    // first = true;
     const editor = monaco.editor.create(node, options);
 
     // editor.setModel(model);

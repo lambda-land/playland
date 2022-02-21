@@ -2,8 +2,13 @@ import { createStorage } from 'typesafe-storage';
 
 
 export type FilePersistance = {
-    fileName: string,
-    content: string
+    fileStorage: {
+        fileName: string,
+        content: string
+    };
+    'session-editor': {
+        'source': string
+    }
 }
 
 export const storage = createStorage<FilePersistance>(localStorage);
