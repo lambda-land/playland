@@ -95,3 +95,17 @@ subscriptions model =
       )
 
 
+
+type alias Bag a = List (a,Int)
+
+
+ins : a -> Bag a -> Bag a
+ins a bg = 
+    case bg of 
+        [] -> [(a,1)]
+        (b,n) :: bgs -> 
+            if b == a 
+                then (a,n + 1) :: bgs
+                else (b,n) :: (ins a bgs)
+
+
