@@ -2,7 +2,8 @@
 
 # Alpine is chosen for its small footprint
 # compared to Ubuntu
-FROM golang:1.16-alpine
+FROM golang:1.17-alpine3.15
+
 
 ## We create an /app directory within our
 ## image that will hold our application source
@@ -15,6 +16,17 @@ ADD ./go /app
 ## any further commands inside our /app
 ## directory
 WORKDIR /app
+
+RUN apk --update add ca-certificates
+
+RUN apk update && apk add --no-cache wget gzip curl nodejs
+
+RUN wget -O binary-for-linux-64-bit.gz 'https://github.com/elm/compiler/releases/download/0.19.1/binary-for-linux-64-bit.gz'
+RUN gzip -d binary-for-linux-64-bit.gz
+RUN mv ./binary-for-linux-64-bit /usr/local/bin/elm
+## RUN rm binary-for-linux-64-bit.gz
+RUN chmod +x /usr/local/bin/elm
+
 ## Add this go mod download command to pull in any dependencies
 RUN go mod download
 ## we run go build to compile the binary
