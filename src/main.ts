@@ -75,7 +75,7 @@ function setupReplEditor(editor: monaco.editor.IStandaloneCodeEditor) {
 
             let failedCount = 1;
             // axios.post('http://localhost:9000/eval', evalPackage)
-            axios.post('https://playland.grape-juice.org/', evalPackage)
+            axios.post('https://playland.grape-juice.org/eval', evalPackage)
                 .then(res => {
                     editor.updateOptions({ readOnly: false });
 
