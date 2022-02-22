@@ -9,3 +9,9 @@ body,html,#golden-layout {
     width: 100%;
     height: 100%;
 }
+// .monaco-editor .view-overlays .current-line,
+// .eval-window .current-line,
+// .eval-window .view-overlays,
+.eval-window .view-overlays .current-line {
+    border: 1px solid rgba(255, 166, 0, 0.548) !important;
+}

@@ -22,7 +22,7 @@ import { encode } from 'base-64';
 import { storage } from './storage';
 
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
-let lastEvalEditorState = 'λ ';
+let lastEvalEditorState = '> ';
 let lastEditorState = lastEvalEditorState;
 let immutableEditorContext = lastEvalEditorState;
 let ignoreInput = false;
@@ -31,12 +31,9 @@ function setupReplEditor(editor: monaco.editor.IStandaloneCodeEditor) {
     editor.updateOptions({
         minimap: {enabled : false},
         lineNumbers: 'off',
-        lineNumbersMinChars: 0,
-        lineDecorationsWidth: 0,
         // theme: 'hc-black'
     });
-    const container = (document as any).getElementById('eval-container');
-    container.classList.add('eval-window');
+    const container = (document as any).getElementById('eval-container')
     // container.style.cssText += 'background-color: #1a2e34 !important;';
     // container.querySelector('.monaco-editor').style.backgroundColor = '#1a2e34';
     const backgrounds = [...container.querySelectorAll('.monaco-editor-background'),...container.querySelectorAll('.monaco-editor'),...container.querySelectorAll('.margin')]
@@ -44,9 +41,9 @@ function setupReplEditor(editor: monaco.editor.IStandaloneCodeEditor) {
         bg.style.backgroundColor = '#1a2e34';
         bg.style.cssText += 'background-color: #1a2e34 !important;';
     }
-    // for (const vl of container.querySelectorAll('.')) {
-    //     vl.style.border += 'border: 2px solid #1a2e34 !important;';
-    // }
+    for (const vl of container.querySelectorAll('.monaco-editor-background')) {
+        vl.style.cssText += 'background-color: #1a2e34 !important;';
+    }
     editor.onKeyDown(event => {
 
         if (event.keyCode == 3) {
@@ -82,7 +79,7 @@ function setupReplEditor(editor: monaco.editor.IStandaloneCodeEditor) {
                     const data = res.data;
                     console.log(data);
                     const { lineNumber, column } = editor.getPosition();
-                    editor.setValue(prevContents + '\n' + (data['evaluated'] || data['error']) + '\nλ ');
+                    editor.setValue(prevContents + '\n' + (data['evaluated'] || data['error']) + '\n> ');
                     editor.setPosition({ lineNumber: lineNumber + 1, column: 3 });
                     lastEvalEditorState = editor.getValue();
 
