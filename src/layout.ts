@@ -8,12 +8,12 @@ export const config: LayoutConfig = {
   root: {
     type: 'column',
     content: [
-      {
-        type: 'component',
-	componentType: 'topbar',
-        isClosable: false,
-	height: 5
-      },
+    //   {
+    //     type: 'component',
+	// componentType: 'topbar',
+    //     isClosable: false,
+	// height: 5
+    //   },
       {
         type: 'row',
         content: [
