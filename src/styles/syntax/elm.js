@@ -6,7 +6,7 @@ import { languages } from 'monaco-editor/esm/vs/basic-languages/fillers/monaco-e
 export var conf = {
     wordPattern: /(-?\d*\.\d\w*)|([^\`\~\!\@\#\%\^\&\*\(\)\-\=\+\[\{\]\}\\\|\;\:\'\"\,\.\<\>\/\?\s]+)/g,
     comments: {
-        lineComment: '//',
+        lineComment: '--',
         blockComment: ['/*', '*/']
     },
     brackets: [
@@ -137,7 +137,7 @@ export var language = {
         '.',
     ],
     // we include these common regular expressions
-    symbols: /[=><!~?:&|+\-*\/\^%]+/,
+    symbols: /[=><!~?:&|+\-*\/\^%\\]+/,
     escapes: /\\(?:[abfnrtv\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})/,
     digits: /\d+(_+\d+)*/,
     octaldigits: /[0-7]+(_+[0-7]+)*/,
@@ -151,7 +151,8 @@ export var language = {
         common: [
             // identifiers and keywords
             [/\S[[a-z]\w*]*\s+:/,'type.identifier'],
-
+            [/\\/, 'keyword.control'],
+            // [/\[\s*\]/, 'keyword'],
             [
                 /[a-z_$][\w$]*/,
                 {
@@ -207,8 +208,10 @@ export var language = {
             [/[ \t\r\n]+/, ''],
             [/\/\*\*(?!\/)/, 'comment.doc', '@jsdoc'],
             [/\/\*/, 'comment', '@comment'],
-            [/\/\/.*$/, 'comment']
+            // [/\/\/.*$/, 'comment']
+            [/(?:\/\/|--).*$/,'comment']
         ],
+        // comment : [[/--*.*[ \t\r\n]+/,'comment']],
         comment: [
             [/[^\/*]+/, 'comment'],
             [/\*\//, 'comment', '@pop'],
