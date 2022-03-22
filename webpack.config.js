@@ -4,6 +4,7 @@ const path = require('path');
 const exec = require('child_process').exec;
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 const isProduction = process.env.NODE_ENV == 'production';
 
@@ -24,7 +25,7 @@ const config = {
         path: path.resolve(__dirname, 'dist'),
         filename: 'main.js'
     },
-    devtool: 'eval-source-map',
+    devtool: 'source-map',
     devServer: {
         open: true,
         host: 'localhost',
@@ -84,7 +85,9 @@ const config = {
                 exclude: [/elm-stuff/, /node_modules/],
                 use: {
                     loader: "ts-loader",
-                    options: {}
+                    options: {
+                        transpileOnly: true
+                    }
                 }
             }
 
@@ -92,6 +95,12 @@ const config = {
             // Learn more about loaders from https://webpack.js.org/loaders/
         ],
     },
+    optimization: {
+        minimize: isProduction,
+        minimizer: [
+          new TerserPlugin({ parallel: true })
+        ],
+    }    
 };
 module.exports = () => {
     if (isProduction) {
