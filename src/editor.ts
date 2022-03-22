@@ -125,7 +125,12 @@ import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 // import 'monaco-editor/esm/vs/basic-languages/systemverilog/systemverilog.contribution.js';
 // import 'monaco-editor/esm/vs/basic-languages/tcl/tcl.contribution.js';
 // import 'monaco-editor/esm/vs/basic-languages/twig/twig.contribution.js';
-import 'monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution.js';
+
+
+// import 'monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution.js';
+
+import './styles/syntax/elm.contribution.js';
+
 // import 'monaco-editor/esm/vs/basic-languages/vb/vb.contribution.js';
 // import 'monaco-editor/esm/vs/basic-languages/xml/xml.contribution.js';
 // import 'monaco-editor/esm/vs/basic-languages/yaml/yaml.contribution.js';
