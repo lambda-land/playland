@@ -139,8 +139,8 @@ import './styles/syntax/elm.contribution.js';
 import monokai from 'monaco-themes/themes/Monokai.json';
 monaco.editor.defineTheme('monokai', monokai as monaco.editor.IStandaloneThemeData);
 
-import complete_dark from './styles/editor-themes/complete-dark.json';
-// import * as monacoThemes from 'monaco-themes';
+// import complete_dark from './styles/editor-themes/complete-dark.json';
+
 // const { parseTmTheme } = require('monaco-themes');
 // monaco.editor.defineTheme('complete-dark', parseTmTheme(JSON.stringify(complete_dark)) as monaco.editor.IStandaloneThemeData);
 
@@ -193,7 +193,7 @@ fibs = [fib 1,fib 2,fib 3,fib 4,fib 5,fib 6,fib 7,fib 8]
 `)
         ].join('\n'),
         language: 'typescript',
-        theme: 'vs-dark',
+        theme: 'monokai',// 'vs-dark',
         automaticLayout: true,
         // readOnly: false,
         ...editorOptions
