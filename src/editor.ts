@@ -76,11 +76,24 @@ export function setupProgramEditor(node: HTMLElement, editorOptions={},defaultSo
     const options = {
         value: [ (defaultSource != null ? defaultSource :
 `
+module PlayLand exposing (..)
 
--- Welcome to PlayLand! 
+-- Welcome to PlayLand!
 
-fib n = if n < 2 then 1 else (fib (n - 2)) + (fib (n - 1))
+nums : number -> List number
+nums n = 
+  if n == 0 
+    then [] 
+    else n :: nums (n - 1)
 
+fib : number -> number
+fib n = 
+  if n < 2
+    then 1
+    else fib (n - 1) + fib (n - 2)
+
+fibs : number -> List number
+fibs n = List.map fib (nums n)
 
 `)
         ].join('\n'),
