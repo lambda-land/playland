@@ -1,11 +1,11 @@
 
-import { Elm } from './Main.elm';
+// import { Elm } from './Main.elm';
 
-// import qs from 'qs';
-const elm = Elm.Main.init({
-    node: document.getElementById('elm'),
-    flags: null
-});
+// // import qs from 'qs';
+// const elm = Elm.Main.init({
+//     node: document.getElementById('elm'),
+//     flags: null
+// });
 
 import * as hooks from './hooks';
 
@@ -19,7 +19,7 @@ import { encode } from 'base-64';
 import { storage } from './storage';
 
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
-let lastEvalEditorState = 'λ ';
+let lastEvalEditorState = '> ';
 let lastEditorState = lastEvalEditorState;
 let immutableEditorContext = lastEvalEditorState;
 let ignoreInput = false;
@@ -31,7 +31,7 @@ function setupReplEditor(editors: Map<string,monaco.editor.IStandaloneCodeEditor
 
 
     const outputViewOptions = {
-        minimap: {enabled : false},
+        minimap: { enabled : false },
         lineNumbers: 'off',
         lineNumbersMinChars: 0,
         lineDecorationsWidth: 0,
@@ -46,22 +46,6 @@ function setupReplEditor(editors: Map<string,monaco.editor.IStandaloneCodeEditor
     inputEditor.setValue(lastEvalEditorState);
     inputEditor.updateOptions(inputEditorOptions);
     
-    // This works START
-    // const container = (document as any).getElementById('eval-container');
-    // container.classList.add('eval-window');
-    // // container.style.cssText += 'background-color: #1a2e34 !important;';
-    // // container.querySelector('.monaco-editor').style.backgroundColor = '#1a2e34';
-    // const backgrounds = [...container.querySelectorAll('.monaco-editor-background'),...container.querySelectorAll('.monaco-editor'),...container.querySelectorAll('.margin')]
-    // for (const bg of backgrounds) {
-    //     bg.style.backgroundColor = '#1a2e34';
-    //     bg.style.cssText += 'background-color: #1a2e34 !important;';
-    // }
-    // This works END
-
-
-    // for (const vl of container.querySelectorAll('.')) {
-    //     vl.style.border += 'border: 2px solid #1a2e34 !important;';
-    // }
 
     const editor = inputEditor;
     inputEditor.onKeyDown(event => {
@@ -69,22 +53,24 @@ function setupReplEditor(editors: Map<string,monaco.editor.IStandaloneCodeEditor
         if (event.keyCode == 3) {
             const prevContents = inputEditor.getValue();
             const source = editors.get('program-editor').getValue();
-
+            const evalExpression = inputEditor.getValue().substring(2);
+            setTimeout( () => { 
+                inputEditor.setValue('> ');
+                inputEditor.setPosition({ lineNumber: 1, column: 3 });
+             }, 0);
             // setTimeout(() => editor.updateOptions({ readOnly: true, theme: 'monokai' }), 0);
 
             const pkg = {
                 'language': 'elm',
                 'source': source
             }
-            console.log(inputEditor.getValue().substring(2))
-            // const evalExpressionLength = prevContents.length - lastEvalEditorState.length;
-            const evalExpression = inputEditor.getValue().substring(2) // prevContents.substring(lastEvalEditorState.length, prevContents.length)
+            
             const evalPackage = { ...pkg, expression: evalExpression /*pkg.source.split('\n').at(-1)*/ };
-            elm.ports.interopToElm.send({
-                tag: "evaluateExpression",
-                source: source,
-                expr: evalExpression
-            });
+            // elm.ports.interopToElm.send({
+            //     tag: "evaluateExpression",
+            //     source: source,
+            //     expr: evalExpression
+            // });
 
             console.log(evalPackage)
 
@@ -100,13 +86,13 @@ function setupReplEditor(editors: Map<string,monaco.editor.IStandaloneCodeEditor
                     console.log(data);
                     const { lineNumber, column } = editor.getPosition();
 
-                    // outputView.setValue(prevContents + '\n' + (data['evaluated'] || data['error']) + '\nλ ');
+                    // outputView.setValue(prevContents + '\n' + (data['evaluated'] || data['error']) + '\n> ');
 
-                    inputEditor.setValue('λ ');
+                    inputEditor.setValue('> ');
                     inputEditor.setPosition({ lineNumber: 1, column: 3 });
     
 
-                    outputView.setValue(outputView.getValue() + '\n' + (data['evaluated'] || data['error']) + '\nλ ');
+                    outputView.setValue(outputView.getValue() + evalExpression + '\n' + (data['evaluated'] || data['error']) + '\n> ');
                     outputView.setPosition({ lineNumber: lineNumber + (data['evaluated'] || data['error']).length + 1, column: 3 });
                     lastEvalEditorState = outputView.getValue();
 
@@ -116,10 +102,10 @@ function setupReplEditor(editors: Map<string,monaco.editor.IStandaloneCodeEditor
 
                     ignoreInput = false;
 
-                    elm.ports.interopToElm.send({
-                        tag: "evaluationResponse",
-                        value: data['evaluated']
-                    });
+                    // elm.ports.interopToElm.send({
+                    //     tag: "evaluationResponse",
+                    //     value: data['evaluated']
+                    // });
                 })
                 .catch(res => {
                     console.error(res);
@@ -127,13 +113,11 @@ function setupReplEditor(editors: Map<string,monaco.editor.IStandaloneCodeEditor
                     failedCount += 1;
                 });
         } else if (event.keyCode === 1) {
-            const prevContents = editor.getValue();
-            const { lineNumber, column } = editor.getPosition();
+            const { lineNumber, column } = inputEditor.getPosition();
             if (column < 4) {
                 new Promise((res, rej) => {
-                    const next = immutableEditorContext;
-                    editor.setValue(next + ' ');
-                    editor.setPosition({ lineNumber: lineNumber, column: 4 });
+                    inputEditor.setValue('>  ');
+                    inputEditor.setPosition({ lineNumber: 1, column: 4 });
                     res(true);
                 });
                 return;
@@ -151,14 +135,14 @@ setTimeout(() => {
 }, 0);
 
 
-elm.ports.interopFromElm.subscribe(fromElm => {
-    console.log(fromElm);
-    switch (fromElm.tag) {
-        case 'display':
-            console.info('Elm:', fromElm.data.message);
-            break;
-    }
-})
+// elm.ports.interopFromElm.subscribe(fromElm => {
+//     console.log(fromElm);
+//     switch (fromElm.tag) {
+//         case 'display':
+//             console.info('Elm:', fromElm.data.message);
+//             break;
+//     }
+// })
 
 import './styles/style.scss';
 (window as any).editors = editors

@@ -103,7 +103,7 @@ export function setupReplOutput(node: HTMLElement) {
         language: 'typescript',
         theme: 'monokai',// 'vs-dark',
         automaticLayout: true,
-        readOnly: false,
+        readOnly: true,
     };
 
     const editor = monaco.editor.create(node, options);
@@ -112,7 +112,7 @@ export function setupReplOutput(node: HTMLElement) {
 
     setTimeout(() => {
         const container = (document as any).getElementById('eval-container');
-        container.classList.add('eval-window');
+        // container.classList.add('eval-window');
         const backgrounds = [...container.querySelectorAll('.monaco-editor-background'),...container.querySelectorAll('.monaco-editor'),...container.querySelectorAll('.margin')]
         for (const bg of backgrounds) {
             bg.style.backgroundColor = '#1a2e34';
