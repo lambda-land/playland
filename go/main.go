@@ -103,7 +103,7 @@ func ElmEvalHandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintf(w, "Failed to get standard output")
 			return
 		}
-		defer out.Close()
+		//defer out.Close()
 		errOut, err := cmd.StderrPipe()
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -131,13 +131,17 @@ func ElmEvalHandler(w http.ResponseWriter, r *http.Request) {
 		in.Write([]byte(data.Expression + "\n"))
 		in.Write([]byte(":exit\n"))
 		
+		result, _ := ioutil.ReadAll(bufOut)
+		
 		if err := cmd.Wait(); err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			fmt.Fprintf(w, "timeout error")
+			fmt.Printf("timeout!")
 			return
 		}
-		var resp JsonResponse
+		
 
+		var resp JsonResponse
 		re := regexp.MustCompile("^((::)?[_a-zA-Z.0-9 ]*)+$")
 		if !re.Match([]byte(data.Expression)) {
 			resp = JsonResponse {
@@ -147,7 +151,7 @@ func ElmEvalHandler(w http.ResponseWriter, r *http.Request) {
 			resp = JsonResponse{
 				Error: string(errMsg),
 			}
-		} else if result, err := ioutil.ReadAll(out); err == nil {
+		} else {
 			res := strings.Split(string(result), "\n")
 			if len(res) >= 2 { 
 				resp = JsonResponse {
@@ -159,7 +163,7 @@ func ElmEvalHandler(w http.ResponseWriter, r *http.Request) {
 					Evaluated: "",	
 				}
 			}
-		}
+		} 
 		os.Remove(filename + ".elm")
 		respBody, _ := json.Marshal(resp)
 		fmt.Fprintf(w, "%s", string(respBody))
