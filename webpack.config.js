@@ -17,6 +17,8 @@ exec('yarn run elm-ts-interop-compile', (err, stdout, stderr) => {
     if (stderr) process.stderr.write(stderr);
 });
 
+console.log('Mode', isProduction ? 'production' : 'development');
+
 
 const config = {
     entry: './src/main.ts',
