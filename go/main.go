@@ -1,6 +1,8 @@
 package main 
 
 import (
+	"time"
+	"context"
 	"strings"
 	"regexp"
 	"log"
@@ -8,6 +10,8 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
+	"os"
+	"math/rand"
 	"os/exec"
 	"net/http"
 	"github.com/rs/cors"
@@ -30,6 +34,18 @@ func chompString(s string) string {
 	return re.ReplaceAllString(s, "")
 }
 
+func getModuleName(r JsonRequest) (string, error) {
+	lines := strings.Split(r.Source, "\n")
+	moduleLine := lines[0]
+	re := regexp.MustCompile("^module .* exposing \\(((.*)(,.*)*|\\.\\.)\\)$")
+	if !re.Match([]byte(moduleLine)) {
+		return "", fmt.Errorf("invalid module specifier")
+	} else {
+		components := strings.Split(moduleLine, " ")
+		return components[1], nil
+	}
+}
+
 func isExpr(s string) bool {
 	if s[0:1] == "> " {
 		return true
@@ -48,7 +64,32 @@ func ElmEvalHandler(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(r.Body)
 	var data JsonRequest
 	if err := json.Unmarshal(body, &data); err == nil {
-		cmd := exec.Command("elm", "repl", "--no-colors")
+		module, err := getModuleName(data)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			fmt.Fprintf(w, "Invalid module header")
+			return
+		}
+		s1 := rand.NewSource(time.Now().UnixNano())
+		r1 := rand.New(s1);
+		filename := fmt.Sprintf("%s_%d", module, r1.Intn(100000))
+		data.Source = strings.Replace(data.Source, module, filename, -1)
+		if file, err := os.Create(filename + ".elm"); err == nil {
+			defer file.Close()
+			if _, err = file.WriteString(data.Source); err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				fmt.Fprintf(w, "Failed to write preamble")
+				return
+			}
+		} else {
+			w.WriteHeader(http.StatusInternalServerError)
+			fmt.Fprintf(w, "Failed to write preamble")
+			return
+		}
+		
+		ctx, cancel := context.WithTimeout(context.Background(), 12*time.Second)
+		defer cancel()
+		cmd := exec.CommandContext(ctx, "elm", "repl", "--no-colors")
 		in, err := cmd.StdinPipe()
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -86,12 +127,15 @@ func ElmEvalHandler(w http.ResponseWriter, r *http.Request) {
 		// Close REPL on terminate
 		
 		// Write Preamble
-		in.Write([]byte(data.Source + "\n"))
+		in.Write([]byte("import " + filename + " exposing (..)\n"))
 		in.Write([]byte(data.Expression + "\n"))
 		in.Write([]byte(":exit\n"))
 		
-		cmd.Process.Wait()
-
+		if err := cmd.Wait(); err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			fmt.Fprintf(w, "timeout error")
+			return
+		}
 		var resp JsonResponse
 
 		re := regexp.MustCompile("^((::)?[_a-zA-Z.0-9 ]*)+$")
@@ -105,11 +149,18 @@ func ElmEvalHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		} else if result, err := ioutil.ReadAll(out); err == nil {
 			res := strings.Split(string(result), "\n")
-			resp = JsonResponse {
-				Evaluated: chompString(res[len(res)-2]),	
+			if len(res) >= 2 { 
+				resp = JsonResponse {
+					Evaluated: chompString(res[len(res)-2]),	
 			
+				}
+			} else {
+				resp = JsonResponse {
+					Evaluated: "",	
+				}
 			}
 		}
+		os.Remove(filename + ".elm")
 		respBody, _ := json.Marshal(resp)
 		fmt.Fprintf(w, "%s", string(respBody))
 	} else {
