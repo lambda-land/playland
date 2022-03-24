@@ -3,7 +3,10 @@
 
 git pull;
 
-docker kill playland-server-container || docker rm playland-server-container || docker kill playland-frontend-container || docker rm playland-frontend-container || echo 1;
+docker kill playland-server-container || echo 1;
+docker rm playland-server-container || echo 1;
+docker kill playland-frontend-container || echo 1;
+docker rm playland-frontend-container || echo 1;
 
 docker system prune --volumes --force || echo 1;
 
