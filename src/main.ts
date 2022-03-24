@@ -76,9 +76,9 @@ function setupReplEditor(editors: Map<string,monaco.editor.IStandaloneCodeEditor
                 'language': 'elm',
                 'source': source
             }
-
+            console.log(inputEditor.getValue().substring(2))
             // const evalExpressionLength = prevContents.length - lastEvalEditorState.length;
-            const evalExpression = prevContents.substring(lastEvalEditorState.length, prevContents.length)
+            const evalExpression = inputEditor.getValue().substring(2) // prevContents.substring(lastEvalEditorState.length, prevContents.length)
             const evalPackage = { ...pkg, expression: evalExpression /*pkg.source.split('\n').at(-1)*/ };
             elm.ports.interopToElm.send({
                 tag: "evaluateExpression",
