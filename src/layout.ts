@@ -1,31 +1,57 @@
 
 import { GoldenLayout } from 'golden-layout';
 import { LayoutConfig } from 'golden-layout';
-import { flattenDiagnosticMessageText, setSourceMapRange } from 'typescript';
-import { setup, setValue } from './editor';
+import { setupProgramEditor, setupReplOutput, setupReplInput } from './editor';
 
 export const config: LayoutConfig = {
+  settings: {
+    reorderEnabled: true,
+    showMaximiseIcon: false,
+  },
+  dimensions: {
+    borderWidth: 2,
+    headerHeight: 20,
+  },
   root: {
     type: 'column',
     content: [
-    //   {
-    //     type: 'component',
-	// componentType: 'topbar',
-    //     isClosable: false,
-	// height: 5
-    //   },
+      //   {
+      //     type: 'component',
+      // componentType: 'topbar',
+      //     isClosable: false,
+      // height: 5
+      //   },
       {
         type: 'row',
         content: [
           {
             type: 'component',
-            componentType: 'text',
-            isClosable: false
+            componentType: 'program',
+            isClosable: false,
+            title: 'Program',
+            id: 'program-tab',
           },
           {
-            type: 'component',
-            componentType: 'eval',
-            isClosable: false
+            type: 'column',
+            content: [
+
+              {
+                type: 'component',
+                componentType: 'eval',
+                isClosable: false,
+                title: 'Evaluation',
+                id: 'eval-tab',
+              },
+              {
+                type: 'component',
+                componentType: 'input',
+                isClosable: false,
+                title: 'Input',
+                height: 10,
+                id: 'input-tab',
+              },
+
+            ]
           }
         ]
       }
@@ -41,55 +67,52 @@ let layout: any = null;
 
 
 export function initLayout() {
-	// const glTheme = `<link type="text/css" rel="stylesheet" href="https://golden-layout.com/files/latest/css/goldenlayout-base.css" /><link type="text/css" rel="stylesheet" href="https://golden-layout.com/files/latest/css/goldenlayout-dark-theme.css" />`;
-	// document.getElementsByTagName('head')[0].innerHTML += glTheme;
-	const gl = new GoldenLayout(document.getElementById('golden-layout'));
-	const renderHTML = (src: string) => {
-		const template = document.createElement('template');
-		template.innerHTML = src.trim();
-		return [template.content.firstChild, template.content.childNodes[0]];
-	}
-	// let cont: any = {};
-	gl.registerComponentFactoryFunction('text', (container,itemConfig) => {
-		// el.setAttribute('style','width: 500; height: 500;');
-
-		// setTimeout(() => setup(container.element), 2000);
-		// const editor = setup(el);
-		// container.element.appendChild(editor);
-		// container.element.appendChild(el);
-		// setup(el);
-		// setValue('hello!');
-		// layout();
-
-		{
-
-			const [el,htmlEl] = renderHTML(`<div id="container" style="height:100%;"></div>`);
-			container.element.appendChild(el);
-			const htmlElem: HTMLElement = htmlEl as HTMLElement;
-			// setTimeout(() => setup(document.getElementById('container')), 2000);
-			// setup(el); ????
-			// setup(document.getElementById('container'))
-			setup(htmlElem);
-		}
-	});
-	gl.registerComponentFactoryFunction('eval', (container,itemConfig) => {
-
-		const [el,htmlEl] = renderHTML(`<div id="eval-container" style="height:100%;"></div>`);
-		container.element.appendChild(el);
-		const htmlElem: HTMLElement = htmlEl as HTMLElement;
-		setup(htmlElem, { 'readOnly': false });
-	});
-
-	gl.registerComponentFactoryFunction('topbar', (container, itemConfig) => {
-		const [el,htmlEl] = renderHTML(`<select name="lang" id="lang"><option value="elm">elm</option></select>`);
-		container.element.appendChild(el);
-
-	});
+  // const glTheme = `<link type="text/css" rel="stylesheet" href="https://golden-layout.com/files/latest/css/goldenlayout-base.css" /><link type="text/css" rel="stylesheet" href="https://golden-layout.com/files/latest/css/goldenlayout-dark-theme.css" />`;
+  // document.getElementsByTagName('head')[0].innerHTML += glTheme;
+  const glContainer = document.getElementById('golden-layout');
+  const gl = new GoldenLayout(glContainer);
 
 
-	gl.loadLayout(config);
 
-	layout = gl;
+  const renderHTML = (src: string) => {
+    const template = document.createElement('template');
+    template.innerHTML = src.trim();
+    return [template.content.firstChild, template.content.childNodes[0]];
+  }
+  gl.registerComponentFactoryFunction('program', (container, itemConfig) => {
+
+    const [el, htmlEl] = renderHTML(`<div id="container" style="height:100%;"></div>`);
+    container.element.appendChild(el);
+    // container.setTitle('Program');
+    const htmlElem: HTMLElement = htmlEl as HTMLElement;
+
+    setupProgramEditor(htmlElem, {
+      tabSize: 2
+    });
+
+  });
+  gl.registerComponentFactoryFunction('eval', (container, itemConfig) => {
+
+    const [el, htmlEl] = renderHTML(`<div id="eval-container" style="height:100%;"></div>`);
+    container.element.appendChild(el);
+    // container.setTitle('Evaluation');
+    const htmlElem: HTMLElement = htmlEl as HTMLElement;
+    setupReplOutput(htmlElem);
+  });
+
+  gl.registerComponentFactoryFunction('input', (container, itemConfig) => {
+    const [el, htmlEl] = renderHTML(`<div id="input-container" style="height:100%;"></div>`);
+    container.element.appendChild(el);
+    // container.setTitle('Input');
+    const htmlElem: HTMLElement = htmlEl as HTMLElement;
+    setupReplInput(htmlElem);
+  });
+
+
+
+  gl.loadLayout(config);
+
+  layout = gl;
 }
 
 

@@ -9,12 +9,9 @@ const elm = Elm.Main.init({
 
 import * as hooks from './hooks';
 
-// import { setup } from './editor';
-
 import { initLayout } from './layout';
 initLayout();
 
-// setTimeout(() => setup(), 2000);
 import axios, { Axios } from 'axios';
 import { editors } from './editor';
 import { encode } from 'base-64';
@@ -26,34 +23,54 @@ let lastEvalEditorState = 'λ ';
 let lastEditorState = lastEvalEditorState;
 let immutableEditorContext = lastEvalEditorState;
 let ignoreInput = false;
-function setupReplEditor(editor: monaco.editor.IStandaloneCodeEditor) {
-    editor.setValue(lastEvalEditorState);
-    editor.updateOptions({
+// function setupReplEditor(editor: monaco.editor.IStandaloneCodeEditor) {
+function setupReplEditor(editors: Map<string,monaco.editor.IStandaloneCodeEditor>) {
+
+    const outputView = editors.get('repl-output');
+    const inputEditor = editors.get('repl-input');
+
+
+    const outputViewOptions = {
         minimap: {enabled : false},
         lineNumbers: 'off',
         lineNumbersMinChars: 0,
         lineDecorationsWidth: 0,
         // theme: 'hc-black'
-    });
-    const container = (document as any).getElementById('eval-container');
-    container.classList.add('eval-window');
-    // container.style.cssText += 'background-color: #1a2e34 !important;';
-    // container.querySelector('.monaco-editor').style.backgroundColor = '#1a2e34';
-    const backgrounds = [...container.querySelectorAll('.monaco-editor-background'),...container.querySelectorAll('.monaco-editor'),...container.querySelectorAll('.margin')]
-    for (const bg of backgrounds) {
-        bg.style.backgroundColor = '#1a2e34';
-        bg.style.cssText += 'background-color: #1a2e34 !important;';
-    }
+    } as monaco.editor.IEditorOptions;
+    outputView.setValue(lastEvalEditorState);
+    outputView.updateOptions(outputViewOptions);
+    
+    const inputEditorOptions = {
+        ...outputViewOptions
+    } as monaco.editor.IEditorOptions;
+    inputEditor.setValue(lastEvalEditorState);
+    inputEditor.updateOptions(inputEditorOptions);
+    
+    // This works START
+    // const container = (document as any).getElementById('eval-container');
+    // container.classList.add('eval-window');
+    // // container.style.cssText += 'background-color: #1a2e34 !important;';
+    // // container.querySelector('.monaco-editor').style.backgroundColor = '#1a2e34';
+    // const backgrounds = [...container.querySelectorAll('.monaco-editor-background'),...container.querySelectorAll('.monaco-editor'),...container.querySelectorAll('.margin')]
+    // for (const bg of backgrounds) {
+    //     bg.style.backgroundColor = '#1a2e34';
+    //     bg.style.cssText += 'background-color: #1a2e34 !important;';
+    // }
+    // This works END
+
+
     // for (const vl of container.querySelectorAll('.')) {
     //     vl.style.border += 'border: 2px solid #1a2e34 !important;';
     // }
-    editor.onKeyDown(event => {
+
+    const editor = inputEditor;
+    inputEditor.onKeyDown(event => {
 
         if (event.keyCode == 3) {
-            const prevContents = editor.getValue();
-            const source = editors[0].getValue();
+            const prevContents = inputEditor.getValue();
+            const source = editors.get('program-editor').getValue();
 
-            setTimeout(() => editor.updateOptions({ readOnly: true, theme: 'vs-dark' }), 0);
+            // setTimeout(() => editor.updateOptions({ readOnly: true, theme: 'monokai' }), 0);
 
             const pkg = {
                 'language': 'elm',
@@ -77,14 +94,22 @@ function setupReplEditor(editor: monaco.editor.IStandaloneCodeEditor) {
             axios.post('http://18.237.13.211:9000/eval', evalPackage)
             // axios.post('https://playland.grape-juice.org/eval', evalPackage)
                 .then(res => {
-                    editor.updateOptions({ readOnly: false });
+                    // editor.updateOptions({ readOnly: false });
 
                     const data = res.data;
                     console.log(data);
                     const { lineNumber, column } = editor.getPosition();
-                    editor.setValue(prevContents + '\n' + (data['evaluated'] || data['error']) + '\nλ ');
-                    editor.setPosition({ lineNumber: lineNumber + 1, column: 3 });
-                    lastEvalEditorState = editor.getValue();
+
+                    // outputView.setValue(prevContents + '\n' + (data['evaluated'] || data['error']) + '\nλ ');
+
+                    inputEditor.setValue('λ ');
+                    inputEditor.setPosition({ lineNumber: 1, column: 3 });
+    
+
+                    outputView.setValue(outputView.getValue() + '\n' + (data['evaluated'] || data['error']) + '\nλ ');
+                    outputView.setPosition({ lineNumber: lineNumber + (data['evaluated'] || data['error']).length + 1, column: 3 });
+                    lastEvalEditorState = outputView.getValue();
+
 
                     lastEditorState = lastEvalEditorState;
                     immutableEditorContext = lastEvalEditorState;
@@ -98,7 +123,7 @@ function setupReplEditor(editor: monaco.editor.IStandaloneCodeEditor) {
                 })
                 .catch(res => {
                     console.error(res);
-                    editor.setValue(`(${failedCount}) ` + 'Endpoint failed to respond.');
+                    outputView.setValue(`(${failedCount}) ` + 'Endpoint failed to respond.');
                     failedCount += 1;
                 });
         } else if (event.keyCode === 1) {
@@ -115,22 +140,15 @@ function setupReplEditor(editor: monaco.editor.IStandaloneCodeEditor) {
             }
         }
     })
-    // editor.onKeyUp(event => {
-    //     lastEditorState = editor.getValue();
-    // })
 }
 
 setTimeout(() => {
-    setupReplEditor(editors[1]);
+    setupReplEditor(editors);
     if (storage.getItem('session-editor')) {
         const { source } = storage.getItem('session-editor');
-        editors[0].setValue(source);
+        editors.get('program-editor').setValue(source);
     }
 }, 0);
-
-// elm.ports.evaluateExpression.subscribe((expression: string) => {
-//     console.log('Evaluated from Elm', expression);
-// });
 
 
 elm.ports.interopFromElm.subscribe(fromElm => {
@@ -143,6 +161,4 @@ elm.ports.interopFromElm.subscribe(fromElm => {
 })
 
 import './styles/style.scss';
-// setTimeout(() => editors[1].updateOptions({ readOnly: true, theme: 'monokai' }), 100);
-// import 'golden-layout/dist/less/'
 (window as any).editors = editors
