@@ -53,7 +53,7 @@ WORKDIR /app-node
 ENV NODE_ENV=production
 
 COPY package.json yarn.lock ./
-RUN yarn install --production
+RUN yarn install --production=false
 
 COPY . /app-node
 # COPY src /app-node
