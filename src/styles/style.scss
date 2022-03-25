@@ -4,6 +4,7 @@
 body,html{
     margin:0;
     padding:0;
+    background-color: #1a2e34;
 }
 body,html,#golden-layout {
     width: 100%;
@@ -12,6 +13,17 @@ body,html,#golden-layout {
 // .monaco-editor .view-overlays .current-line,
 // .eval-window .current-line,
 // .eval-window .view-overlays,
-.eval-window .view-overlays .current-line {
-    border: 1px solid rgba(255, 166, 0, 0.548) !important;
+.eval-input-window .view-overlays .current-line {
+    border: 2px solid rgba(255, 166, 0, 0.548) !important;
+    height: 20;
+}
+.eval-output-window .view-overlays .current-line {
+    border: 0.5px solid rgba(255, 166, 0, 0.548) !important;
+}
+.eval-output-window .monaco-editor .view-overlays .current-line {
+    background-color: #1a2e34;
+}
+
+.eval-output-window .monaco-editor .cursors-layer .cursor {
+    display: none !important;
 }
