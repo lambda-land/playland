@@ -23,6 +23,7 @@ let lastEvalEditorState = '> ';
 let lastEditorState = lastEvalEditorState;
 let immutableEditorContext = lastEvalEditorState;
 let ignoreInput = false;
+let locked = false;
 // function setupReplEditor(editor: monaco.editor.IStandaloneCodeEditor) {
 function setupReplEditor(editors: Map<string,monaco.editor.IStandaloneCodeEditor>) {
 
@@ -50,15 +51,35 @@ function setupReplEditor(editors: Map<string,monaco.editor.IStandaloneCodeEditor
     const editor = inputEditor;
     inputEditor.onKeyDown(event => {
 
+        const block = () => {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+        const clear = () => {
+            inputEditor.setValue('> ');
+            inputEditor.setPosition({ lineNumber: 1, column:  3});
+        }
+        
+        if (locked === true || 
+                (event.keyCode == 3 &&
+                    inputEditor.getValue().substring(2).trim().length == 0)) 
+        {
+            block();
+            clear();
+            return;
+        }
+
         if (event.keyCode == 3) {
-            const prevContents = inputEditor.getValue();
+
+            locked = true;
+
             const source = editors.get('program-editor').getValue();
-            const evalExpression = inputEditor.getValue().substring(2);
-            setTimeout( () => { 
-                inputEditor.setValue('> ');
-                inputEditor.setPosition({ lineNumber: 1, column: 3 });
-             }, 0);
-            // setTimeout(() => editor.updateOptions({ readOnly: true, theme: 'monokai' }), 0);
+            const evalExpression = inputEditor.getValue().substring(2).trim();
+
+            block();
+            clear();
+
 
             const pkg = {
                 'language': 'elm',
@@ -66,13 +87,7 @@ function setupReplEditor(editors: Map<string,monaco.editor.IStandaloneCodeEditor
             }
             
             const evalPackage = { ...pkg, expression: evalExpression /*pkg.source.split('\n').at(-1)*/ };
-            // elm.ports.interopToElm.send({
-            //     tag: "evaluateExpression",
-            //     source: source,
-            //     expr: evalExpression
-            // });
 
-            console.log(evalPackage)
 
             storage.setItem('session-editor', { source });
 
@@ -84,23 +99,19 @@ function setupReplEditor(editors: Map<string,monaco.editor.IStandaloneCodeEditor
 
                     const data = res.data;
                     console.log(data);
-                    const { lineNumber, column } = editor.getPosition();
-
-                    // outputView.setValue(prevContents + '\n' + (data['evaluated'] || data['error']) + '\n> ');
-
-                    inputEditor.setValue('> ');
-                    inputEditor.setPosition({ lineNumber: 1, column: 3 });
-    
+                    const { lineNumber, column } = outputView.getPosition();
 
                     outputView.setValue(outputView.getValue() + evalExpression + '\n' + (data['evaluated'] || data['error']) + '\n> ');
                     outputView.setPosition({ lineNumber: lineNumber + (data['evaluated'] || data['error']).length + 1, column: 3 });
+                    outputView.revealLine(outputView.getModel().getLineCount());
+
                     lastEvalEditorState = outputView.getValue();
 
 
                     lastEditorState = lastEvalEditorState;
                     immutableEditorContext = lastEvalEditorState;
 
-                    ignoreInput = false;
+                    locked = false;
 
                     // elm.ports.interopToElm.send({
                     //     tag: "evaluationResponse",
@@ -109,17 +120,14 @@ function setupReplEditor(editors: Map<string,monaco.editor.IStandaloneCodeEditor
                 })
                 .catch(res => {
                     console.error(res);
-                    outputView.setValue(`(${failedCount}) ` + 'Endpoint failed to respond.');
+                    outputView.setValue(`(${failedCount}) ` + 'Endpoint failed to respond.\n' + res.message);
                     failedCount += 1;
+                    locked = false;
                 });
         } else if (event.keyCode === 1) {
-            const { lineNumber, column } = inputEditor.getPosition();
+            const { column } = inputEditor.getPosition();
             if (column < 4) {
-                new Promise((res, rej) => {
-                    inputEditor.setValue('>  ');
-                    inputEditor.setPosition({ lineNumber: 1, column: 4 });
-                    res(true);
-                });
+                block();
                 return;
             }
         }

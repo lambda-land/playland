@@ -125,7 +125,7 @@ export function setupReplOutput(node: HTMLElement) {
 
     setTimeout(() => {
         const container = (document as any).getElementById('eval-container');
-        // container.classList.add('eval-window');
+        container.classList.add('eval-output-window');
         const backgrounds = [...container.querySelectorAll('.monaco-editor-background'),...container.querySelectorAll('.monaco-editor'),...container.querySelectorAll('.margin')]
         for (const bg of backgrounds) {
             bg.style.backgroundColor = '#1a2e34';
@@ -149,7 +149,7 @@ export function setupReplInput(node: HTMLElement) {
 
     setTimeout(() => {
         const container = (document as any).getElementById('input-container');
-        container.classList.add('eval-window');
+        container.classList.add('eval-input-window');
         const backgrounds = [...container.querySelectorAll('.monaco-editor-background'),...container.querySelectorAll('.monaco-editor'),...container.querySelectorAll('.margin')]
         for (const bg of backgrounds) {
             bg.style.backgroundColor = '#1a2e34';
