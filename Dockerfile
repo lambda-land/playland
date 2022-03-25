@@ -55,8 +55,8 @@ ENV NODE_ENV=production
 COPY package.json yarn.lock ./
 RUN yarn install --production
 
-# COPY . /app-node
-COPY src /app-node
+COPY . /app-node
+# COPY src /app-node
 
 RUN yarn run build:prod
 
@@ -70,7 +70,7 @@ COPY ./nginx.conf /etc/nginx/nginx.conf
 
 
 RUN nginx -t
-RUN service nginx restart
+# RUN service nginx restart
 RUN nginx
 
 EXPOSE 80 9000
