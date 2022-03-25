@@ -56,6 +56,8 @@ COPY package.json yarn.lock ./
 RUN yarn install --production
 
 COPY . /app-node
+# COPY src /app-node
+
 RUN yarn run build:prod
 
 
@@ -66,9 +68,11 @@ COPY --from=node-build-deps /app-node/dist /usr/share/nginx/html
 
 COPY ./nginx.conf /etc/nginx/nginx.conf
 
-RUN nginx -t
 
-EXPOSE 80
-EXPOSE 9000
+RUN nginx -t
+# RUN service nginx restart
+RUN nginx
+
+EXPOSE 80 9000
 
 CMD ["/server"]

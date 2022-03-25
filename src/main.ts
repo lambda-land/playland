@@ -18,7 +18,9 @@ import { encode } from 'base-64';
 
 import { storage } from './storage';
 
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
+// import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
+import * as monaco from 'monaco-editor';
+
 let lastEvalEditorState = '> ';
 let lastEditorState = lastEvalEditorState;
 let immutableEditorContext = lastEvalEditorState;
@@ -134,11 +136,29 @@ function setupReplEditor(editors: Map<string,monaco.editor.IStandaloneCodeEditor
     })
 }
 
-setTimeout(() => {
+import * as monaco1 from 'monaco-editor';
+
+import themeList from 'monaco-themes/themes/themelist.json';
+
+// import { registerAllAvailableLanguages } from 'monaco-ace-tokenizer/lib/lazy';
+
+setTimeout(async () => {
+    // registerAllAvailableLanguages();
+
+    for (const [name,path] of Object.entries(themeList)) {
+        console.log(name,path);
+        const data = await import(`monaco-themes/themes/${path}.json`)
+        monaco1.editor.defineTheme(name, data);
+    }
     setupReplEditor(editors);
     if (storage.getItem('session-editor')) {
         const { source } = storage.getItem('session-editor');
         editors.get('program-editor').setValue(source);
+    }
+    for (const editor of editors.values()) {
+        editor.updateOptions({
+            theme: 'zenburnesque'
+        })
     }
 }, 0);
 

@@ -5,6 +5,7 @@ const exec = require('child_process').exec;
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 
 const isProduction = process.env.NODE_ENV == 'production';
 
@@ -43,6 +44,9 @@ const config = {
     plugins: [
         new HtmlWebpackPlugin({
             template: 'index.html',
+        }),
+        new MonacoWebpackPlugin({
+            features: []
         }),
 
         // Add your plugins here
