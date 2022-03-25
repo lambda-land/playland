@@ -53,9 +53,12 @@ import 'monaco-editor/esm/vs/editor/contrib/suggest/suggestController.js';
 // import 'monaco-editor/esm/vs/editor/standalone/browser/toggleHighContrast/toggleHighContrast.js';
 // END_FEATURES
 
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
+// import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+// import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
+import * as monaco from 'monaco-editor';
 
-import './styles/syntax/elm.contribution.js';
+
+import './styles/syntax/elm.contribution';
 
 
 import monokai from 'monaco-themes/themes/Monokai.json';
@@ -99,7 +102,7 @@ fibs n = List.map fib (nums n)
 
 `)
         ].join('\n'),
-        language: 'typescript',
+        language: 'elm',
         theme: theme,// 'vs-dark',
         automaticLayout: true,
         // readOnly: false,
@@ -115,7 +118,7 @@ fibs n = List.map fib (nums n)
 
 export function setupReplOutput(node: HTMLElement) {
     const options = {
-        language: 'typescript',
+        language: 'elm',
         theme: theme,// 'vs-dark',
         automaticLayout: true,
         readOnly: true,
@@ -141,7 +144,7 @@ export function setupReplOutput(node: HTMLElement) {
 
 export function setupReplInput(node: HTMLElement) {
     const options = {
-        language: 'typescript',
+        language: 'elm',
         theme: theme,
         automaticLayout: true,
     };
@@ -176,3 +179,6 @@ export function setValue(v: string) {
 
 
 
+import * as languages from 'monaco-languages';
+
+console.log(monaco.languages.getLanguages())
