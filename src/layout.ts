@@ -1,10 +1,10 @@
 
-import { GoldenLayout } from 'golden-layout';
-import { LayoutConfig } from 'golden-layout';
-import { setupProgramEditor, setupReplOutput, setupReplInput } from './editor';
+import { GoldenLayout, ComponentContainer, ComponentItem, LayoutConfig } from 'golden-layout';
+import { setupProgramEditor, setupReplOutput, setupReplInput, layout as resizeEditors } from './editor';
 
 export const config: LayoutConfig = {
   settings: {
+    hasHeaders: true,
     reorderEnabled: true,
     showMaximiseIcon: false,
   },
@@ -49,6 +49,7 @@ export const config: LayoutConfig = {
                 title: 'Input',
                 height: 10,
                 id: 'input-tab',
+                // hasHeaders: false,
               },
 
             ]
@@ -100,10 +101,14 @@ export function initLayout() {
     setupReplOutput(htmlElem);
   });
 
-  gl.registerComponentFactoryFunction('input', (container, itemConfig) => {
+  gl.registerComponentFactoryFunction('input', (container: ComponentContainer, itemConfig) => {
     const [el, htmlEl] = renderHTML(`<div id="input-container" style="height:100%;"></div>`);
     container.element.appendChild(el);
-    // container.setTitle('Input');
+    // container.parent.headerConfig.show(false);
+    const parent: ComponentItem = container.parent;
+    console.log(container)
+
+    console.log(parent)
     const htmlElem: HTMLElement = htmlEl as HTMLElement;
     setupReplInput(htmlElem);
   });
@@ -113,6 +118,12 @@ export function initLayout() {
   gl.loadLayout(config);
 
   layout = gl;
+
+  window.addEventListener('resize', () => {
+      layout.updateSize(window.innerWidth, window.innerHight);
+      resizeEditors();
+  });
+
 }
 
 

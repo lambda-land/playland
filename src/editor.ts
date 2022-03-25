@@ -68,6 +68,8 @@ monaco.editor.defineTheme('monokai', monokai as monaco.editor.IStandaloneThemeDa
 
 type Pair<T,U>=[T,U];
 
+const theme = 'vs-dark'; // 'vs-dark'
+
 export let editors: Map<string, monaco.editor.IStandaloneCodeEditor> = new Map<string, monaco.editor.IStandaloneCodeEditor>();//: Pair<monaco.editor.IStandaloneCodeEditor,monaco.editor.ITextModel>[]= [];
 let first = false;
 // declare let self: any;
@@ -98,7 +100,7 @@ fibs n = List.map fib (nums n)
 `)
         ].join('\n'),
         language: 'typescript',
-        theme: 'monokai',// 'vs-dark',
+        theme: theme,// 'vs-dark',
         automaticLayout: true,
         // readOnly: false,
         ...editorOptions
@@ -114,7 +116,7 @@ fibs n = List.map fib (nums n)
 export function setupReplOutput(node: HTMLElement) {
     const options = {
         language: 'typescript',
-        theme: 'monokai',// 'vs-dark',
+        theme: theme,// 'vs-dark',
         automaticLayout: true,
         readOnly: true,
     };
@@ -140,7 +142,7 @@ export function setupReplOutput(node: HTMLElement) {
 export function setupReplInput(node: HTMLElement) {
     const options = {
         language: 'typescript',
-        theme: 'monokai',
+        theme: theme,
         automaticLayout: true,
     };
     const editor = monaco.editor.create(node, options);
@@ -172,9 +174,5 @@ export function setValue(v: string) {
     }
 }
 
-
-window.addEventListener('resize', () => {
-    layout();
-});
 
 
