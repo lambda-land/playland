@@ -1,6 +1,21 @@
 @import '~golden-layout/src/scss/goldenlayout-base.scss';
 @import '~golden-layout/dist/css/themes/goldenlayout-borderless-dark-theme.css';
 
+@font-face {
+    font-family: 'Liberation Mono';
+    src: url('./LiberationMono-Regular.ttf') format('ttf');
+  }
+@font-face {
+font-family: 'SF Mono Regular';
+src: url('./SF-Mono-Regular.otf') format('opentype');
+}
+@font-face {
+    font-family: 'SF Mono Light';
+    src: url('./SF-Mono-Light.otf') format('opentype');
+}
+
+// @import './SF-Mono-Light.otf';
+
 body,html{
     margin:0;
     padding:0;
