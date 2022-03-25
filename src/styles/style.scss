@@ -6,13 +6,13 @@
     src: url('./LiberationMono-Regular.ttf') format('ttf');
   }
 @font-face {
-font-family: 'SF Mono Regular';
-src: url('./SF-Mono-Regular.otf') format('opentype');
+font-family: 'SF Mono';
+src: url('./SFMono.ttf') format('ttf');
 }
-@font-face {
-    font-family: 'SF Mono Light';
-    src: url('./SF-Mono-Light.otf') format('opentype');
-}
+// @font-face {
+//     font-family: 'SF Mono Light';
+//     src: url('./SF-Mono-Light.otf') format('opentype');
+// }
 
 // @import './SF-Mono-Light.otf';
 
@@ -36,7 +36,8 @@ body,html,#golden-layout {
     border: 0.5px solid rgba(255, 166, 0, 0.548) !important;
 }
 .eval-output-window .monaco-editor .view-overlays .current-line {
-    background-color: #1a2e34;
+    // background-color: #1a2e34;
+    background-color: #00000000;
 }
 
 .eval-output-window .monaco-editor .cursors-layer .cursor {

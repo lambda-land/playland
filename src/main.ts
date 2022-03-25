@@ -161,18 +161,43 @@ setTimeout(async () => {
         const { source } = storage.getItem('session-editor');
         editors.get('program-editor').setValue(source);
     }
+    
+    for (const editor of editors.values()) {
+        editor.updateOptions({
+            fontFamily: 'SF Mono',
+            theme: 'active4d',
+        })
+    }
+    const replBGColor = themeData['active4d']['colors']['editor.background']
+    let container = (document as any).getElementById('eval-container');
+    // container.classList.add('eval-output-window');
+    let backgrounds = [...container.querySelectorAll('.monaco-editor-background'),...container.querySelectorAll('.monaco-editor'),...container.querySelectorAll('.margin')]
+    for (const bg of backgrounds) {
+        bg.style.backgroundColor = replBGColor;
+        bg.style.cssText += `background-color: ${replBGColor} !important;`;
+    }
+    container = (document as any).getElementById('input-container');
+    backgrounds = [...container.querySelectorAll('.monaco-editor-background'),...container.querySelectorAll('.monaco-editor'),...container.querySelectorAll('.margin')]
+    for (const bg of backgrounds) {
+        bg.style.backgroundColor = replBGColor;
+        bg.style.cssText += `background-color: ${replBGColor} !important;`;
+    }
     for (const {name, path, theme} of themes) {
         await new Promise((res,rej) => {
             for (const editor of editors.values()) {
                 editor.updateOptions({
-                    fontFamily: 'Liberation Mono',
                     theme: name,
                 })
             }
-            const replBGColor = themeData[name]['colors']['editor.lineHighlightBackground']
-            const container = (document as any).getElementById('eval-container');
-            // container.classList.add('eval-output-window');
-            const backgrounds = [...container.querySelectorAll('.monaco-editor-background'),...container.querySelectorAll('.monaco-editor'),...container.querySelectorAll('.margin')]
+            const replBGColor = themeData[name]['colors']['editor.background']
+            let container = (document as any).getElementById('eval-container');
+            let backgrounds = [...container.querySelectorAll('.monaco-editor-background'),...container.querySelectorAll('.monaco-editor'),...container.querySelectorAll('.margin')]
+            for (const bg of backgrounds) {
+                bg.style.backgroundColor = replBGColor;
+                bg.style.cssText += `background-color: ${replBGColor} !important;`;
+            }
+            container = (document as any).getElementById('input-container');
+            backgrounds = [...container.querySelectorAll('.monaco-editor-background'),...container.querySelectorAll('.monaco-editor'),...container.querySelectorAll('.margin')]
             for (const bg of backgrounds) {
                 bg.style.backgroundColor = replBGColor;
                 bg.style.cssText += `background-color: ${replBGColor} !important;`;
@@ -194,8 +219,10 @@ setTimeout(async () => {
 // })
 
 import './styles/LiberationMono-Regular.ttf';
-import './styles/SF-Mono-Light.otf';
-import './styles/SF-Mono-Regular.otf';
+import './styles/SFMono.ttf';
+
+// import './styles/SF-Mono-Light.otf';
+// import './styles/SF-Mono-Regular.otf';
 
 import './styles/style.scss';
 (window as any).editors = editors
