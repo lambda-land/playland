@@ -45,9 +45,9 @@ const config = {
         new HtmlWebpackPlugin({
             template: 'index.html',
         }),
-        new MonacoWebpackPlugin({
-            features: []
-        }),
+        // new MonacoWebpackPlugin({
+        //     features: []
+        // }),
 
         // Add your plugins here
         // Learn more about plugins from https://webpack.js.org/configuration/plugins/
@@ -57,44 +57,82 @@ const config = {
     },
     module: {
         rules: [
+            // {
+            //     test: /\.elm$/,
+            //     exclude: [/elm-stuff/, /node_modules/],
+            //     loader: 'elm-webpack-loader',
+            //     options: {
+            //         optimize: isProduction,
+            //         debug: elmDebug,
+            //         // files: [
+            //         //     path.resolve(__dirname, "src/Main.elm"),
+            //         //     // path.resolve(__dirname, "Path/To/OtherModule.elm")
+            //         // ]
+            //     }
+            // },
+            // {
+            //     test: /\.(js|jsx)$/i,
+            //     exclude: [/elm-stuff/, /node_modules/],
+            //     loader: 'babel-loader',
+            // },
+            // {
+            //     test: /\.css$/i,
+            //     use: [stylesHandler, 'css-loader'],
+            // },
+            // {
+            //     test: /\.s[ac]ss$/i,
+            //     use: [stylesHandler, 'css-loader', 'sass-loader'],
+            // },
             {
-                test: /\.elm$/,
-                exclude: [/elm-stuff/, /node_modules/],
-                loader: 'elm-webpack-loader',
-                options: {
-                    optimize: true,
-                    debug: elmDebug,
-                    files: [
-                        path.resolve(__dirname, "src/Main.elm"),
-                        // path.resolve(__dirname, "Path/To/OtherModule.elm")
-                    ]
-                }
+                test: /\.(sa|sc|c)ss$/,
+                use: [
+                    'style-loader',
+                    'css-loader',
+                    'sass-loader',
+                ],
             },
-            {
-                test: /\.(js|jsx)$/i,
-                loader: 'babel-loader',
-            },
-            {
-                test: /\.css$/i,
-                use: [stylesHandler, 'css-loader'],
-            },
-            {
-                test: /\.s[ac]ss$/i,
-                use: [stylesHandler, 'css-loader', 'sass-loader'],
-            },
-            {
-                test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
-                type: 'asset',
-            },
+            // {
+            //     test: /\.(png|svg|jpg|jpeg|gif)$/i,
+            //     type: 'asset/resource',
+            //   },
+            //  {
+            //    test: /\.(woff|woff2|eot|ttf|otf)$/i,
+            //    type: 'asset/resource',
+            //  },
+            // {
+            //     test: /\.(woff2?|eot|ttf|otf)$/,
+            //     loader: 'file-loader',
+            //     options: {
+            //         limit: 10000,
+            //         name: '[name].[hash:7].[ext]'
+            //     }
+            //  },
+             {
+                test: /\.(woff|woff2|eot|ttf|otf)$/,
+                loader: "file-loader"
+             },
+            // {
+            //     test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+            //     use: [{ loader: 'url-loader', options: { limit: 100000 } }]
+            // },
+            // {
+            //     test: /\.ttf/,
+            //     use: "file-loader",
+            //   },
+            // {
+            //     test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
+            //     type: 'asset',
+            // },
             {
                 test: /\.tsx?$/,
                 exclude: [/elm-stuff/, /node_modules/],
-                use: {
-                    loader: "ts-loader",
-                    options: {
-                        transpileOnly: true
-                    }
-                }
+                use: ['babel-loader', 'ts-loader'],
+                // use: {
+                //     loader: "ts-loader",
+                //     options: {
+                //         transpileOnly: true
+                //     }
+                // }
             }
 
             // Add your rules for custom modules here
@@ -104,9 +142,9 @@ const config = {
     optimization: {
         minimize: isProduction,
         minimizer: [
-          new TerserPlugin({ parallel: true })
+            new TerserPlugin({ parallel: true })
         ],
-    }    
+    }
 };
 module.exports = () => {
     if (isProduction) {

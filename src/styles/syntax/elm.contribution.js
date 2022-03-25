@@ -4,7 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 // import { registerLanguage } from 'monaco-editor/esm/vs/basic-languages/_.contribution.js';
 // import { registerLanguage } from 'monaco-editor/esm/vs/basic-languages/monaco.contribution';
-import * as monaco from 'monaco-editor';
+// import * as monaco from 'monaco-editor';
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
+
 // import { languages } from 'monaco-editor/esm/vs/editor/editor.api.js';
 // declare module 'monaco-editor/esm/vs/basic-languages/_.contribution';
 

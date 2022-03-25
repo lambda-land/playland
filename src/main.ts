@@ -18,8 +18,8 @@ import { encode } from 'base-64';
 
 import { storage } from './storage';
 
-// import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
-import * as monaco from 'monaco-editor';
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
+// import * as monaco from 'monaco-editor';
 
 let lastEvalEditorState = '> ';
 let lastEditorState = lastEvalEditorState;
@@ -136,7 +136,6 @@ function setupReplEditor(editors: Map<string,monaco.editor.IStandaloneCodeEditor
     })
 }
 
-import * as monaco1 from 'monaco-editor';
 
 import themeList from 'monaco-themes/themes/themelist.json';
 
@@ -144,22 +143,69 @@ import themeList from 'monaco-themes/themes/themelist.json';
 
 setTimeout(async () => {
     // registerAllAvailableLanguages();
-
-    for (const [name,path] of Object.entries(themeList)) {
+    const themeData: any = {}
+    const fetches = Object.entries(themeList).map(async ([name,path]) => {
         console.log(name,path);
         const data = await import(`monaco-themes/themes/${path}.json`)
-        monaco1.editor.defineTheme(name, data);
+        themeData[name] = data;
+        return { name, path, theme: data };
+    });
+    const themes = await Promise.all(fetches);
+
+    for (const {name, path, theme} of themes) {
+        monaco.editor.defineTheme(name, theme);
     }
+
     setupReplEditor(editors);
     if (storage.getItem('session-editor')) {
         const { source } = storage.getItem('session-editor');
         editors.get('program-editor').setValue(source);
     }
+    
     for (const editor of editors.values()) {
         editor.updateOptions({
-            theme: 'zenburnesque'
+            fontFamily: 'SF Mono',
+            theme: 'active4d',
         })
     }
+    const replBGColor = themeData['active4d']['colors']['editor.background']
+    let container = (document as any).getElementById('eval-container');
+    // container.classList.add('eval-output-window');
+    let backgrounds = [...container.querySelectorAll('.monaco-editor-background'),...container.querySelectorAll('.monaco-editor'),...container.querySelectorAll('.margin')]
+    for (const bg of backgrounds) {
+        bg.style.backgroundColor = replBGColor;
+        bg.style.cssText += `background-color: ${replBGColor} !important;`;
+    }
+    container = (document as any).getElementById('input-container');
+    backgrounds = [...container.querySelectorAll('.monaco-editor-background'),...container.querySelectorAll('.monaco-editor'),...container.querySelectorAll('.margin')]
+    for (const bg of backgrounds) {
+        bg.style.backgroundColor = replBGColor;
+        bg.style.cssText += `background-color: ${replBGColor} !important;`;
+    }
+    for (const {name, path, theme} of themes) {
+        await new Promise((res,rej) => {
+            for (const editor of editors.values()) {
+                editor.updateOptions({
+                    theme: name,
+                })
+            }
+            const replBGColor = themeData[name]['colors']['editor.background']
+            let container = (document as any).getElementById('eval-container');
+            let backgrounds = [...container.querySelectorAll('.monaco-editor-background'),...container.querySelectorAll('.monaco-editor'),...container.querySelectorAll('.margin')]
+            for (const bg of backgrounds) {
+                bg.style.backgroundColor = replBGColor;
+                bg.style.cssText += `background-color: ${replBGColor} !important;`;
+            }
+            container = (document as any).getElementById('input-container');
+            backgrounds = [...container.querySelectorAll('.monaco-editor-background'),...container.querySelectorAll('.monaco-editor'),...container.querySelectorAll('.margin')]
+            for (const bg of backgrounds) {
+                bg.style.backgroundColor = replBGColor;
+                bg.style.cssText += `background-color: ${replBGColor} !important;`;
+            }
+        setTimeout(() => {res(null)},5000);});
+    }
+
+
 }, 0);
 
 
@@ -171,6 +217,12 @@ setTimeout(async () => {
 //             break;
 //     }
 // })
+
+import './styles/LiberationMono-Regular.ttf';
+import './styles/SFMono.ttf';
+
+// import './styles/SF-Mono-Light.otf';
+// import './styles/SF-Mono-Regular.otf';
 
 import './styles/style.scss';
 (window as any).editors = editors

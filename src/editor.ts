@@ -17,7 +17,7 @@ import 'monaco-editor/esm/vs/editor/contrib/cursorUndo/cursorUndo.js';
 // import 'monaco-editor/esm/vs/editor/contrib/dnd/dnd.js';
 // import 'monaco-editor/esm/vs/editor/contrib/documentSymbols/documentSymbols.js';
 import 'monaco-editor/esm/vs/editor/contrib/find/findController.js';
-import 'monaco-editor/esm/vs/editor/contrib/folding/folding.js';
+// import 'monaco-editor/esm/vs/editor/contrib/folding/folding.js';
 // import 'monaco-editor/esm/vs/editor/contrib/fontZoom/fontZoom.js';
 // import 'monaco-editor/esm/vs/editor/contrib/format/formatActions.js';
 // import 'monaco-editor/esm/vs/editor/contrib/gotoError/gotoError.js';
@@ -54,8 +54,8 @@ import 'monaco-editor/esm/vs/editor/contrib/suggest/suggestController.js';
 // END_FEATURES
 
 // import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
-// import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
-import * as monaco from 'monaco-editor';
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
+// import * as monaco from 'monaco-editor';
 
 
 import './styles/syntax/elm.contribution';
@@ -179,6 +179,6 @@ export function setValue(v: string) {
 
 
 
-import * as languages from 'monaco-languages';
+// import * as languages from 'monaco-languages';
 
 console.log(monaco.languages.getLanguages())
