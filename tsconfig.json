@@ -11,7 +11,7 @@
     "allowSyntheticDefaultImports": true,
     "downlevelIteration": true,
     // "types": ["./src/types/ts"],
-    "typeRoots": ["node_modules/@types","src"],
+    // "typeRoots": ["node_modules/@types","src"],
     // "include": ["./src/**/*"],
   },
 }
