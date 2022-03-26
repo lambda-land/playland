@@ -80,8 +80,7 @@ let first = false;
 export function setupProgramEditor(node: HTMLElement, editorOptions={},defaultSource: string | null = null) {
     const options = {
         value: [ (defaultSource != null ? defaultSource :
-`
-module PlayLand exposing (..)
+`module PlayLand exposing (..)
 
 -- Welcome to PlayLand!
 
