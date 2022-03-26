@@ -2,6 +2,7 @@
 import { GoldenLayout, ComponentContainer, ComponentItem, LayoutConfig } from 'golden-layout';
 import { setupProgramEditor, setupReplOutput, setupReplInput, layout as resizeEditors, editors } from './editor';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
+import { storage } from './storage';
 
 export const config: LayoutConfig = {
   settings: {
@@ -141,6 +142,9 @@ export async function initLayout() {
           }
           document.getElementById('select-theme').addEventListener('change', event => {
             const value = (document.getElementById('select-theme') as any).value// (typeof event === 'string') ? event : (event as any).target.value;
+            
+            storage.setItem('user-theme', { theme: value });
+
             monaco.editor.setTheme(value);
 
             const replBGColor = themeData[value]['colors']['editor.background']
@@ -170,7 +174,7 @@ export async function initLayout() {
           
         })().then(() => {
             const selector: any = document.getElementById('select-theme');
-            selector.value = 'katzenmilch'
+            selector.value = storage.getItem('user-theme').theme || 'katzenmilch';
             selector.dispatchEvent(new Event('change'));
         });
     });
