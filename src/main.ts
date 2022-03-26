@@ -172,4 +172,6 @@ layoutInitializer
 // import './styles/SF-Mono-Regular.otf';
 // import './styles/fonts/stylesheet.css';
 import './styles/style.scss';
+import './styles/favicon/favicon.png';
+import './styles/favicon/favicon.svg';
 (window as any).editors = editors
