@@ -91,6 +91,9 @@ src: url('./SFMono.ttf') format('ttf');
     // border: 1px solid #cccccc;
     // isolation: isolate;
 }
+.lm_tab.lm_active {
+    background: #b8b8b848;
+}
 body,html{
     margin:0;
     padding:0;
