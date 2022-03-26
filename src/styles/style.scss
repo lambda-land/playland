@@ -7,13 +7,14 @@
 
 
 
+// @font-face {
+//     font-family: 'Liberation Mono';
+//     src: url('./LiberationMono-Regular.ttf') format('ttf');
+//   }
 @font-face {
-    font-family: 'Liberation Mono';
-    src: url('./LiberationMono-Regular.ttf') format('ttf');
-  }
-@font-face {
-font-family: 'SF Mono';
-src: url('./SFMono.ttf') format('ttf');
+    font-family: 'SF Mono';
+    font-weight: 400; font-style: normal;
+    src: url('./SFMono.ttf') format('ttf');
 }
 // @font-face {
 //     font-family: 'SF Mono Light';

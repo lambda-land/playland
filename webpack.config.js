@@ -107,10 +107,21 @@ const config = {
             //         name: '[name].[hash:7].[ext]'
             //     }
             //  },
-             {
-                test: /\.(woff|woff2|eot|ttf|otf)$/,
-                loader: "file-loader"
-             },
+            // {
+            //     test: /\.(woff|woff2|eot|ttf|otf)$/i,
+            //     type: 'asset/resource',
+            //   },
+            {
+                test: /\.ttf$/,
+                type: 'asset/resource',
+                use: ['file-loader']
+            },
+          
+              
+            //  {
+            //     test: /\.(woff|woff2|eot|ttf|otf)$/,
+            //     use: ["file-loader",'url-loader']
+            //  },
             // {
             //     test: /\.(png|woff|woff2|eot|ttf|svg)$/,
             //     use: [{ loader: 'url-loader', options: { limit: 100000 } }]
