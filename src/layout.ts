@@ -143,7 +143,7 @@ export async function initLayout() {
           document.getElementById('select-theme').addEventListener('change', event => {
             const value = (document.getElementById('select-theme') as any).value// (typeof event === 'string') ? event : (event as any).target.value;
             
-            storage.setItem('user-theme', { theme: value });
+            storage.setItem('user-theme', value);
 
             monaco.editor.setTheme(value);
 
