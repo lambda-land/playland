@@ -154,7 +154,7 @@ layoutInitializer
     for (const editor of editors.values()) {
         editor.updateOptions({
             fontFamily: 'SF Mono',
-            theme: 'xcode-default',
+            theme: 'katzenmilch',
         })
     }
     // setTimeout(() => {

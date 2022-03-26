@@ -34,10 +34,13 @@ src: url('./SFMono.ttf') format('ttf');
 
 //     mix-blend-mode: difference;
 // }
-// .lm_splitter {
-//     background: #797979;
-//     mix-blend-mode: difference;
-// }
+.lm_splitter {
+    background: #8b8b8b6c;
+    background-color: #8b8b8b6c;
+    color: #8b8b8b6c;
+    border-color: #8b8b8b6c;
+    mix-blend-mode: difference;
+}
 // .lm_items {
 //     background-color: white;
 //     mix-blend-mode: normal;
@@ -72,7 +75,7 @@ src: url('./SFMono.ttf') format('ttf');
     border: 1px solid #8b8b8b6c;
     // border: 1px solid #797979;
 
-    mix-blend-mode: difference;
+    // mix-blend-mode: difference;
 }
 .lm_header,
 .lm_tabs,
@@ -83,8 +86,8 @@ src: url('./SFMono.ttf') format('ttf');
     // background: #797979;
     background-color: inherit;
     // border: 1px #ffffff;
-
-    mix-blend-mode: luminosity;
+    border-color: #8b8b8b6c;
+    // mix-blend-mode: luminosity;
     // border: 1px solid #cccccc;
     // isolation: isolate;
 }

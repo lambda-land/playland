@@ -50,8 +50,8 @@ export const config: LayoutConfig = {
                 type: 'component',
                 componentType: 'topbar',
                 isClosable: false,
-                height: 2,
-                title: 'Settings',
+                height: 5,
+                title: 'Color Theme',
                 // hasHeaders: false,
               },
 
@@ -170,7 +170,7 @@ export async function initLayout() {
           
         })().then(() => {
             const selector: any = document.getElementById('select-theme');
-            selector.value = 'xcode-default'
+            selector.value = 'katzenmilch'
             selector.dispatchEvent(new Event('change'));
         });
     });
