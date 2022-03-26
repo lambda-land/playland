@@ -1,5 +1,11 @@
 @import '~golden-layout/src/scss/goldenlayout-base.scss';
-@import '~golden-layout/dist/css/themes/goldenlayout-borderless-dark-theme.css';
+// @import '~golden-layout/dist/css/themes/goldenlayout-borderless-dark-theme.css';
+// @import '~golden-layout/dist/css/themes/goldenlayout-light-theme.css';
+@import '~golden-layout/dist/css/themes/goldenlayout-light-theme.css';
+
+// @import './Fira_Code_v6.2/fira_code.css';
+
+
 
 @font-face {
     font-family: 'Liberation Mono';
@@ -15,16 +21,83 @@ src: url('./SFMono.ttf') format('ttf');
 // }
 
 // @import './SF-Mono-Light.otf';
+.lm_goldenlayout {
+    background: inherit;
+    color: inherit;
+    background-color: inherit;
+}
 
+// .lm_splitter {
+//     color: #ffffff7f;
+//     background: #ffffff7f;
+//     background-color: #ffffff7f;
+
+//     mix-blend-mode: difference;
+// }
+// .lm_splitter {
+//     background: #797979;
+//     mix-blend-mode: difference;
+// }
+// .lm_items {
+//     background-color: white;
+//     mix-blend-mode: normal;
+// }
+.lm_content {
+    background: inherit;
+    background-color: inherit;
+
+    border: 1px solid #8b8b8b6c;
+    // mix-blend-mode: difference;
+    mix-blend-mode: normal;
+
+}
+.monaco-editor {
+    background: white;
+    color: black;
+    background-color: white;
+    mix-blend-mode: normal;
+
+}
+.eval-container,
+.program-container,
+.input-container {
+    mix-blend-mode: normal;
+}
+.lm_header
+.lm_tab {
+    // color: inherit;
+    // background: inherit;
+    // background-color: inherit;
+
+    border: 1px solid #8b8b8b6c;
+    // border: 1px solid #797979;
+
+    mix-blend-mode: difference;
+}
+.lm_header,
+.lm_tabs,
+.lm_tab.lm_active {
+    // background: #00000000;
+    color: inherit;
+    background: inherit;
+    // background: #797979;
+    background-color: inherit;
+    // border: 1px #ffffff;
+
+    mix-blend-mode: luminosity;
+    // border: 1px solid #cccccc;
+    // isolation: isolate;
+}
 body,html{
     margin:0;
     padding:0;
-    background-color: #1a2e34;
+    // background-color: #1a2e34;
 }
 body,html,#golden-layout {
     width: 100%;
     height: 100%;
 }
+
 // .monaco-editor .view-overlays .current-line,
 // .eval-window .current-line,
 // .eval-window .view-overlays,
