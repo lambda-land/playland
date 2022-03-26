@@ -9,9 +9,7 @@ export type FilePersistance = {
     'session-editor': {
         'source': string
     };
-    'user-theme': {
-        'theme': string
-    }
+    'user-theme': string
 }
 
 export const storage = createStorage<FilePersistance>(localStorage);

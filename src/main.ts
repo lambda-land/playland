@@ -154,7 +154,7 @@ layoutInitializer
     for (const editor of editors.values()) {
         editor.updateOptions({
             fontFamily: 'SF Mono',
-            theme: storage.getItem('user-theme').theme || 'katzenmilch',
+            theme: storage.getItem('user-theme') || 'katzenmilch',
         })
     }
     // setTimeout(() => {
