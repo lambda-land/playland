@@ -111,11 +111,19 @@ const config = {
             //     test: /\.(woff|woff2|eot|ttf|otf)$/i,
             //     type: 'asset/resource',
             //   },
+            // {
+            //     test: /\.ttf$/,
+            //     type: 'asset/resource',
+            //     loader: 'file-loader',
+            //     options: {
+            //         limit: 10000,
+            //         name: '[name].[ext]'
+            //     }
+            // },
             {
-                test: /\.ttf$/,
+                test: /\.(woff|woff2|eot|ttf|otf)$/i,
                 type: 'asset/resource',
-                use: ['file-loader']
-            },
+              },
           
               
             //  {

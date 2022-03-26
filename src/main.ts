@@ -153,7 +153,7 @@ layoutInitializer
     
     for (const editor of editors.values()) {
         editor.updateOptions({
-            fontFamily: '"SF Mono",monospace',
+            fontFamily: 'sf_monoregular',
             theme: storage.getItem('user-theme') || 'katzenmilch',
         })
     }
@@ -175,8 +175,8 @@ layoutInitializer
 //     }
 // })
 
-import './styles/LiberationMono-Regular.ttf';
-import './styles/SFMono.ttf';
+// import './styles/LiberationMono-Regular.ttf';
+// import './styles/SFMono.ttf';
 
 // import './styles/Fira_Code_v6.2/'
 // import './styles/SF-Mono-Light.otf';
