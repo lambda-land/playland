@@ -121,6 +121,16 @@ const config = {
             //     }
             // },
             {
+                test: /\.(svg|png|gif|jpg|ico)$/,
+                // include: path.resolve(__dirname, path),
+                use: {
+                    loader: 'file-loader',
+                    options: {
+                        name: '[name].[ext]'
+                    }
+                }
+            },
+            {
                 test: /\.(woff|woff2|eot|ttf|otf)$/i,
                 type: 'asset/resource',
               },

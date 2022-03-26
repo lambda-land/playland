@@ -142,12 +142,13 @@ func ElmEvalHandler(w http.ResponseWriter, r *http.Request) {
 		
 
 		var resp JsonResponse
-		re := regexp.MustCompile("^((::)?[_a-zA-Z.0-9 ]*)+$")
-		if !re.Match([]byte(data.Expression)) {
-			resp = JsonResponse {
-				Error: "Invalid expression; we suspect you meant either a type or to run a REPL command",
-			}
-		} else	if errMsg, err := ioutil.ReadAll(errOut); err == nil && string(errMsg) != "" {
+		// re := regexp.MustCompile("^((::)?[_a-zA-Z.0-9 ]*)+$")
+		// if !re.Match([]byte(data.Expression)) {
+		// 	resp = JsonResponse {
+		// 		Error: "Invalid expression; we suspect you meant either a type or to run a REPL command",
+		// 	}
+		// } else	
+		if errMsg, err := ioutil.ReadAll(errOut); err == nil && string(errMsg) != "" {
 			resp = JsonResponse{
 				Error: string(errMsg),
 			}
