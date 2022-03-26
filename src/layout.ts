@@ -174,7 +174,7 @@ export async function initLayout() {
           
         })().then(() => {
             const selector: any = document.getElementById('select-theme');
-            selector.value = storage.getItem('user-theme').theme || 'katzenmilch';
+            selector.value = storage.getItem('user-theme') || 'katzenmilch';
             selector.dispatchEvent(new Event('change'));
         });
     });
