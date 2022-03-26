@@ -9,8 +9,9 @@
 
 import * as hooks from './hooks';
 
-import { initLayout } from './layout';
-initLayout();
+import { initLayout, editorThemes } from './layout';
+
+const layoutInitializer = initLayout();
 
 import axios, { Axios } from 'axios';
 import { editors } from './editor';
@@ -137,26 +138,14 @@ function setupReplEditor(editors: Map<string,monaco.editor.IStandaloneCodeEditor
 }
 
 
-import themeList from 'monaco-themes/themes/themelist.json';
 
 // import { registerAllAvailableLanguages } from 'monaco-ace-tokenizer/lib/lazy';
 
-setTimeout(async () => {
-    // registerAllAvailableLanguages();
-    const themeData: any = {}
-    const fetches = Object.entries(themeList).map(async ([name,path]) => {
-        console.log(name,path);
-        const data = await import(`monaco-themes/themes/${path}.json`)
-        themeData[name] = data;
-        return { name, path, theme: data };
-    });
-    const themes = await Promise.all(fetches);
-
-    for (const {name, path, theme} of themes) {
-        monaco.editor.defineTheme(name, theme);
-    }
+layoutInitializer
+.then(async () => {
 
     setupReplEditor(editors);
+
     if (storage.getItem('session-editor')) {
         const { source } = storage.getItem('session-editor');
         editors.get('program-editor').setValue(source);
@@ -165,48 +154,16 @@ setTimeout(async () => {
     for (const editor of editors.values()) {
         editor.updateOptions({
             fontFamily: 'SF Mono',
-            theme: 'active4d',
+            theme: 'xcode-default',
         })
     }
-    const replBGColor = themeData['active4d']['colors']['editor.background']
-    let container = (document as any).getElementById('eval-container');
-    // container.classList.add('eval-output-window');
-    let backgrounds = [...container.querySelectorAll('.monaco-editor-background'),...container.querySelectorAll('.monaco-editor'),...container.querySelectorAll('.margin')]
-    for (const bg of backgrounds) {
-        bg.style.backgroundColor = replBGColor;
-        bg.style.cssText += `background-color: ${replBGColor} !important;`;
-    }
-    container = (document as any).getElementById('input-container');
-    backgrounds = [...container.querySelectorAll('.monaco-editor-background'),...container.querySelectorAll('.monaco-editor'),...container.querySelectorAll('.margin')]
-    for (const bg of backgrounds) {
-        bg.style.backgroundColor = replBGColor;
-        bg.style.cssText += `background-color: ${replBGColor} !important;`;
-    }
-    for (const {name, path, theme} of themes) {
-        await new Promise((res,rej) => {
-            for (const editor of editors.values()) {
-                editor.updateOptions({
-                    theme: name,
-                })
-            }
-            const replBGColor = themeData[name]['colors']['editor.background']
-            let container = (document as any).getElementById('eval-container');
-            let backgrounds = [...container.querySelectorAll('.monaco-editor-background'),...container.querySelectorAll('.monaco-editor'),...container.querySelectorAll('.margin')]
-            for (const bg of backgrounds) {
-                bg.style.backgroundColor = replBGColor;
-                bg.style.cssText += `background-color: ${replBGColor} !important;`;
-            }
-            container = (document as any).getElementById('input-container');
-            backgrounds = [...container.querySelectorAll('.monaco-editor-background'),...container.querySelectorAll('.monaco-editor'),...container.querySelectorAll('.margin')]
-            for (const bg of backgrounds) {
-                bg.style.backgroundColor = replBGColor;
-                bg.style.cssText += `background-color: ${replBGColor} !important;`;
-            }
-        setTimeout(() => {res(null)},5000);});
-    }
+    // setTimeout(() => {
+    //     const selector: any = document.getElementById('select-theme');
+    //     selector.value = 'krtheme'
+    //     selector.dispatchEvent(new Event('change'));
+    // }, 50);
 
-
-}, 0);
+});
 
 
 // elm.ports.interopFromElm.subscribe(fromElm => {
@@ -220,7 +177,7 @@ setTimeout(async () => {
 
 import './styles/LiberationMono-Regular.ttf';
 import './styles/SFMono.ttf';
-
+// import './styles/Fira_Code_v6.2/'
 // import './styles/SF-Mono-Light.otf';
 // import './styles/SF-Mono-Regular.otf';
 
