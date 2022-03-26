@@ -153,7 +153,10 @@ layoutInitializer
     
     for (const editor of editors.values()) {
         editor.updateOptions({
-            fontFamily: 'sf_monoregular',
+            fontFamily: "'SFMono', 'sf_monoregular','SF Mono', monospace",
+            fontWeight: 'lighter',
+            fontSize: 12,
+            // fontLigatures: false,
             theme: storage.getItem('user-theme') || 'katzenmilch',
         })
     }
@@ -181,6 +184,6 @@ layoutInitializer
 // import './styles/Fira_Code_v6.2/'
 // import './styles/SF-Mono-Light.otf';
 // import './styles/SF-Mono-Regular.otf';
-
+// import './styles/fonts/stylesheet.css';
 import './styles/style.scss';
 (window as any).editors = editors
