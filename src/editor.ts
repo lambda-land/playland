@@ -33,7 +33,7 @@ import 'monaco-editor/esm/vs/editor/contrib/indentation/indentation.js';
 // import 'monaco-editor/esm/vs/editor/contrib/multicursor/multicursor.js';
 // import 'monaco-editor/esm/vs/editor/contrib/parameterHints/parameterHints.js';
 import 'monaco-editor/esm/vs/editor/contrib/rename/rename.js';
-import 'monaco-editor/esm/vs/editor/contrib/smartSelect/smartSelect.js';
+// import 'monaco-editor/esm/vs/editor/contrib/smartSelect/smartSelect.js';
 // import 'monaco-editor/esm/vs/editor/contrib/snippet/snippetController2.js';
 import 'monaco-editor/esm/vs/editor/contrib/suggest/suggestController.js';
 // import 'monaco-editor/esm/vs/editor/contrib/toggleTabFocusMode/toggleTabFocusMode.js';
@@ -61,8 +61,8 @@ import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 import './styles/syntax/elm.contribution';
 
 
-import monokai from 'monaco-themes/themes/Monokai.json';
-monaco.editor.defineTheme('monokai', monokai as monaco.editor.IStandaloneThemeData);
+// import monokai from 'monaco-themes/themes/Monokai.json';
+// monaco.editor.defineTheme('monokai', monokai as monaco.editor.IStandaloneThemeData);
 
 // import complete_dark from './styles/editor-themes/complete-dark.json';
 

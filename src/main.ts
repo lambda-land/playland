@@ -105,7 +105,7 @@ function setupReplEditor(editors: Map<string,monaco.editor.IStandaloneCodeEditor
                     const { lineNumber, column } = outputView.getPosition();
 
                     outputView.setValue(outputView.getValue() + evalExpression + '\n' + (data['evaluated'] || data['error']) + '\n> ');
-                    outputView.setPosition({ lineNumber: lineNumber + (data['evaluated'] || data['error']).length + 1, column: 3 });
+                    outputView.setPosition({ lineNumber: outputView.getModel().getLineCount(), column: 3 });
                     outputView.revealLine(outputView.getModel().getLineCount());
 
                     lastEvalEditorState = outputView.getValue();
@@ -154,29 +154,15 @@ layoutInitializer
     for (const editor of editors.values()) {
         editor.updateOptions({
             fontFamily: "'SFMono', 'sf_monoregular','SF Mono', monospace",
-            fontWeight: 'lighter',
-            fontSize: 12,
-            // fontLigatures: false,
+            fontWeight: '500',
+            fontSize: 13,
+            fontLigatures: true,
             theme: storage.getItem('user-theme') || 'katzenmilch',
         })
     }
-    // setTimeout(() => {
-    //     const selector: any = document.getElementById('select-theme');
-    //     selector.value = 'krtheme'
-    //     selector.dispatchEvent(new Event('change'));
-    // }, 50);
 
 });
 
-
-// elm.ports.interopFromElm.subscribe(fromElm => {
-//     console.log(fromElm);
-//     switch (fromElm.tag) {
-//         case 'display':
-//             console.info('Elm:', fromElm.data.message);
-//             break;
-//     }
-// })
 
 // import './styles/LiberationMono-Regular.ttf';
 // import './styles/SFMono.ttf';
