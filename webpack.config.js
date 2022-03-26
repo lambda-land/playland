@@ -13,10 +13,10 @@ const elmDebug = false;
 
 const stylesHandler = 'style-loader';
 
-exec('yarn run elm-ts-interop-compile', (err, stdout, stderr) => {
-    if (stdout) process.stdout.write(stdout);
-    if (stderr) process.stderr.write(stderr);
-});
+// exec('yarn run elm-ts-interop-compile', (err, stdout, stderr) => {
+//     if (stdout) process.stdout.write(stdout);
+//     if (stderr) process.stderr.write(stderr);
+// });
 
 console.log('Mode', isProduction ? 'production' : 'development');
 
