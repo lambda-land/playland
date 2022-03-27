@@ -104,9 +104,12 @@ fibs n = List.map fib (nums n)
         language: 'elm',
         theme: theme,// 'vs-dark',
         automaticLayout: true,
+        wordWrap: 'on',
+        wrappingIndent: 'indent',
+
         // readOnly: false,
         ...editorOptions
-    };
+    } as monaco.editor.IEditorOptions;
     // first = true;
     const editor = monaco.editor.create(node, options);
 
@@ -121,7 +124,9 @@ export function setupReplOutput(node: HTMLElement) {
         theme: theme,// 'vs-dark',
         automaticLayout: true,
         readOnly: true,
-    };
+        wordWrap: 'on',
+        wrappingIndent: 'indent'
+    } as monaco.editor.IEditorOptions;
 
     const editor = monaco.editor.create(node, options);
 
@@ -146,7 +151,10 @@ export function setupReplInput(node: HTMLElement) {
         language: 'elm',
         theme: theme,
         automaticLayout: true,
-    };
+        wordWrap: 'on',
+        wrappingIndent: 'indent'
+    } as monaco.editor.IEditorOptions;
+    
     const editor = monaco.editor.create(node, options);
 
     editors.set('repl-input',editor);
