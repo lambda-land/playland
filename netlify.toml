@@ -1,0 +1,10 @@
+[[redirects]]
+  from = "/eval"
+  to = "http://18.237.13.211:9000/eval"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify"}
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
