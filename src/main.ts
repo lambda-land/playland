@@ -119,7 +119,7 @@ function setupReplEditor(editors: Map<string,monaco.editor.IStandaloneCodeEditor
             // axios.post('https://welloffdotingomnipage.iainmon.repl.co/eval', evalPackage)
 
             // axios.post('https://playland.grape-juice.org/eval', evalPackage)
-            axios.post('http://localhost/eval',evalPackage)
+            axios.post('https://localhost/eval',evalPackage)
                 .then(res => {
                     // editor.updateOptions({ readOnly: false });
 
