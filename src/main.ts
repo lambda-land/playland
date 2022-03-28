@@ -15,12 +15,14 @@ const layoutInitializer = initLayout();
 
 import axios, { Axios } from 'axios';
 import { editors } from './editor';
-import { encode } from 'base-64';
 
 
 import { storage } from './storage';
 
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
+
+
+
 // import * as monaco from 'monaco-editor';
 
 let lastEvalEditorState = '> ';
@@ -185,7 +187,6 @@ function setupReplEditor(editors: Map<string,monaco.editor.IStandaloneCodeEditor
 
 
 
-// import { registerAllAvailableLanguages } from 'monaco-ace-tokenizer/lib/lazy';
 
 layoutInitializer
 .then(async () => {
