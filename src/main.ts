@@ -34,6 +34,19 @@ let locked = false;
 const history: string[] = [];
 let historyIdx = 1;
 
+function getEvaluationEndpoint() {
+    const page = (window as any).location.href;
+    switch (page) {
+        case 'http://18.237.13.211/':
+            return 'http://18.237.13.211:9000/eval';
+        case 'https://playland.netlify.app/':
+            return 'https://playland.netlify.app/eval'
+        default:
+            return 'https://play-land.netlify.app/eval';
+            // return page + 'eval'
+    }
+}
+
 // function setupReplEditor(editor: monaco.editor.IStandaloneCodeEditor) {
 function setupReplEditor(editors: Map<string,monaco.editor.IStandaloneCodeEditor>) {
 
@@ -119,7 +132,9 @@ function setupReplEditor(editors: Map<string,monaco.editor.IStandaloneCodeEditor
             // axios.post('https://welloffdotingomnipage.iainmon.repl.co/eval', evalPackage)
 
             // axios.post('https://playland.grape-juice.org/eval', evalPackage)
-            axios.post('https://localhost/eval',evalPackage)
+            // axios.post('https://play-land.netlify.app/eval',evalPackage)
+            const endpoint = getEvaluationEndpoint();
+            axios.post(endpoint,evalPackage)
                 .then(res => {
                     // editor.updateOptions({ readOnly: false });
 
