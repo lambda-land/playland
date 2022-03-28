@@ -22,11 +22,15 @@ console.log('Mode', isProduction ? 'production' : 'development');
 
 
 const config = {
-    entry: './src/main.ts',
+    entry: {
+        'main': './src/main.ts',
+        'editor.worker': 'monaco-editor/esm/vs/editor/editor.worker.js',
+    },
     mode: 'development',
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'main.js'
+        globalObject: 'self',
+		filename: '[name].js',
     },
     devtool: 'source-map',
     devServer: {
