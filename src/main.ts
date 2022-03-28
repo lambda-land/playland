@@ -17,6 +17,7 @@ import axios, { Axios } from 'axios';
 import { editors } from './editor';
 import { encode } from 'base-64';
 
+
 import { storage } from './storage';
 
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
@@ -27,6 +28,10 @@ let lastEditorState = lastEvalEditorState;
 let immutableEditorContext = lastEvalEditorState;
 let ignoreInput = false;
 let locked = false;
+
+const history: string[] = [];
+let historyIdx = 1;
+
 // function setupReplEditor(editor: monaco.editor.IStandaloneCodeEditor) {
 function setupReplEditor(editors: Map<string,monaco.editor.IStandaloneCodeEditor>) {
 
@@ -65,6 +70,7 @@ function setupReplEditor(editors: Map<string,monaco.editor.IStandaloneCodeEditor
         }
         
         if (locked === true || 
+            inputEditor.getPosition().column < 3 || 
                 (event.keyCode == 3 &&
                     inputEditor.getValue().substring(2).trim().length == 0)) 
         {
@@ -79,6 +85,18 @@ function setupReplEditor(editors: Map<string,monaco.editor.IStandaloneCodeEditor
 
             const source = editors.get('program-editor').getValue();
             const evalExpression = inputEditor.getValue().substring(2).trim();
+
+
+            if (history.at(history.length - 1) !== evalExpression) {  history.push(evalExpression); }
+            // if (history.length > 0) {
+            //     if (history[history.length - 1] !== evalExpression) {
+            //         history.push(evalExpression);
+            //     }
+            // } else {
+            //     history.push(evalExpression);
+            // }
+
+            historyIdx = history.length;
 
             block();
             clear();
@@ -129,14 +147,40 @@ function setupReplEditor(editors: Map<string,monaco.editor.IStandaloneCodeEditor
                     failedCount += 1;
                     locked = false;
                 });
-        } else if (event.keyCode === 1) {
+        } else if (event.keyCode === 1 || event.keyCode === 15) {
             const { column } = inputEditor.getPosition();
             if (column < 4) {
                 block();
                 return;
             }
+        } else if (event.keyCode === 16 || event.keyCode === 18) {
+            
+            block();
+            
+            const inc = (event.keyCode == 16 ? -1 : 1);
+
+            if (historyIdx + inc < 0 || history.length === 0) {
+                historyIdx = 0;
+                
+            } else if (historyIdx + inc >= history.length) {
+                historyIdx = history.length;
+                if (inputEditor.getValue() == '> ') { return; }
+                inputEditor.setValue('> ');
+                inputEditor.setPosition({ lineNumber: 1, column: 3 });
+                
+            } else {
+                historyIdx += inc;
+                const { column } = inputEditor.getPosition();
+                const newInput = '> ' + history[historyIdx];
+                inputEditor.setValue(newInput);
+                inputEditor.setPosition({ lineNumber: 1, column: newInput.length + 1});
+            }
         }
+
+        
+
     })
+
 }
 
 

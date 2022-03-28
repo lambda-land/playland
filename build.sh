@@ -11,7 +11,7 @@ docker rm playland-frontend-container || echo 1;
 docker system prune --volumes --force || echo 1;
 
 docker build -t playland-server . -f Dockerfile.server;
-docker run -d -p 9000:9000 --restart=always --name="playland-server-container" --memory-reservation="100m" --memory-swap="600m" --memory="500m" --cpu-period=100000 --cpu-quota=50000 playland-server;
+docker run -d -p 9000:9000 --restart=always --name="playland-server-container" --memory-reservation="100m" --memory-swap="600m" --memory="500m" --cpu-period=100000 --cpu-quota=70000 playland-server;
 
 # docker run -d -p 9000:9000 --restart=always --name="playland-server-container" playland-server;
 # docker update --memory-reservation="100m" --memory-swap="600m" --memory="500m" --cpu-quota="7000000" playland-server-container;
