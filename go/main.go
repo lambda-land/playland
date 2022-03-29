@@ -103,7 +103,10 @@ func ElmEvalHandler(w http.ResponseWriter, r *http.Request) {
       log.Print(err)
       return
 		}
-    if file, err := os.Create("input.txt"); err == nil {
+    inputFileName := filename + ".input.txt"
+    errorFileName := filename + ".error.txt"
+    outputFileName := filename + ".output.txt"
+    if file, err := os.Create(inputFileName); err == nil {
 			defer file.Close()
       inputCmds := "import " + filename + " exposing (..)\n" + data.Expression + "\n"
 			if _, err = file.WriteString(inputCmds); err != nil {
@@ -144,9 +147,10 @@ func ElmEvalHandler(w http.ResponseWriter, r *http.Request) {
     // }
     // log.Print(string(stdout))
 		// cmd = exec.Command("cat " +"input.txt | ./elm repl --no-colors 2> " + "error.txt 1> " + "output.txt")
-    cmd := exec.CommandContext(ctx,"sh","runelm.sh")
+    runCMD := "cat " + inputFileName + " | elm repl --no-colors 2> " + errorFileName + " 1> " + outputFileName
+    cmd := exec.CommandContext(ctx,"sh","-c", runCMD)
 
-    log.Print("cat " +"input.txt | ./elm repl --no-colors 2> " + "error.txt 1> " + "output.txt")
+    log.Print(runCMD)
     err = cmd.Run()
     if err != nil {
       log.Print(err)
@@ -158,8 +162,8 @@ func ElmEvalHandler(w http.ResponseWriter, r *http.Request) {
       log.Print(err)
       return
     }
-    stdOut, err1 := ioutil.ReadFile("output.txt")
-    stdErr, err2 := ioutil.ReadFile("error.txt")
+    stdOut, err1 := ioutil.ReadFile(outputFileName)
+    stdErr, err2 := ioutil.ReadFile(errorFileName)
 
     if err1 != nil || err2 != nil {
       log.Print(err1)
@@ -186,9 +190,9 @@ func ElmEvalHandler(w http.ResponseWriter, r *http.Request) {
     }
 
     os.Remove(filename + ".elm")
-    os.Remove("error.txt")
-    os.Remove("output.txt")
-    os.Remove("input.txt")
+    os.Remove(inputFileName)
+    os.Remove(outputFileName)
+    os.Remove(errorFileName)
     respBody, _ := json.Marshal(resp1)
 		fmt.Fprintf(w, "%s", string(respBody))
 		// in, err := cmd.StdinPipe()
