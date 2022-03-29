@@ -152,7 +152,14 @@ function setupReplEditor(editors: Map<string,monaco.editor.IStandaloneCodeEditor
             // axios.post('https://playland.grape-juice.org/eval', evalPackage)
             // axios.post('https://play-land.netlify.app/eval',evalPackage)
             const endpoint = getEvaluationEndpoint();
-            axios.post(endpoint,evalPackage)
+            axios.post(endpoint,evalPackage
+            //     ,{
+            //     // headers: {
+            //     //     // 'Access-Control-Allow-Origin': '*',
+            //     //     // 'Content-Type': 'application/json',
+            //     // }
+            // }
+            )
                 .then(res => {
                     // editor.updateOptions({ readOnly: false });
 
