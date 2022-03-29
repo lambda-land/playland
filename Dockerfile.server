@@ -37,9 +37,9 @@ RUN go build -o main .
 COPY nginx.server.conf /etc/nginx/nginx.conf
 COPY supervisor.conf /etc/supervisor.conf
 
-RUN nginx -t
-RUN nginx -c /etc/nginx/nginx.conf
-RUN nginx -s reload
+# RUN nginx -t
+# RUN nginx -c /etc/nginx/nginx.conf
+# RUN nginx -s reload
 
 ## Our start command which kicks off
 ## our newly created binary executable
