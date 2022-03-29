@@ -34,12 +34,26 @@ let locked = false;
 const history: string[] = [];
 let historyIdx = 1;
 
+
+function processSource(source: string): string {
+    const linebreak = /\r\n|\n\r|\n|\r/g;
+    const comments = /(--[^\n\r]*)/g;
+    const emptylines = /^(?:[\t ]*(?:\r?\n|\r))+/gm;
+
+    const reduced = source.replace(comments,'')
+                          .replace(emptylines,'')
+                          .replace(linebreak, '\n');
+
+    return reduced;
+}
+
 function getEvaluationEndpoint() {
     const page = (window as any).location.href;
     switch (page) {
         case 'http://18.237.13.211/':
             return 'http://18.237.13.211:9000/eval';
         case 'http://35.166.255.165/':
+        case 'http://localhost:3000/':
             return 'http://35.166.255.165:9000/eval'
         case 'https://playland.netlify.app/':
             return 'https://playland.netlify.app/eval'
@@ -101,6 +115,8 @@ function setupReplEditor(editors: Map<string,monaco.editor.IStandaloneCodeEditor
             locked = true;
 
             const source = editors.get('program-editor').getValue();
+            const reduced = processSource(source);
+
             const evalExpression = inputEditor.getValue().substring(2).trim();
 
 
@@ -121,7 +137,7 @@ function setupReplEditor(editors: Map<string,monaco.editor.IStandaloneCodeEditor
 
             const pkg = {
                 'language': 'elm',
-                'source': source
+                'source': reduced
             }
             
             const evalPackage = { ...pkg, expression: evalExpression /*pkg.source.split('\n').at(-1)*/ };
