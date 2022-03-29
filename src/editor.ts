@@ -99,7 +99,7 @@ let first = false;
 export function setupProgramEditor(node: HTMLElement, editorOptions={},defaultSource: string | null = null) {
     const options = {
         value: [ (defaultSource != null ? defaultSource :
-`module PlayLand exposing (..)
+'\n'/*`module PlayLand exposing (..)
 
 -- Welcome to PlayLand!
 
@@ -118,7 +118,7 @@ fib n =
 fibs : number -> List number
 fibs n = List.map fib (nums n)
 
-`)
+`*/)
         ].join('\n'),
         language: 'elm',
         theme: theme,// 'vs-dark',
