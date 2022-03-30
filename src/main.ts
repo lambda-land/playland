@@ -59,13 +59,13 @@ function processSource(source: string): string {
     const processed = lines.join('\n');
 
 
-    for (const line of lines) {
-        console.log(line, line.match(moduleHeader));
-    }
+    // for (const line of lines) {
+    //     console.log(line, line.match(moduleHeader));
+    // }
 
-    console.log(lines);
+    // console.log(lines);
 
-    console.log(processed)
+    // console.log(processed)
 
     return processed;
 
