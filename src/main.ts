@@ -124,14 +124,14 @@ function setupReplEditor(editors: Map<string,monaco.editor.IStandaloneCodeEditor
             const evalExpression = inputEditor.getValue().substring(2).trim();
 
 
-            if (history.at(history.length - 1) !== evalExpression) {  history.push(evalExpression); }
-            // if (history.length > 0) {
-            //     if (history[history.length - 1] !== evalExpression) {
-            //         history.push(evalExpression);
-            //     }
-            // } else {
-            //     history.push(evalExpression);
-            // }
+            // if (history.at(history.length - 1) !== evalExpression) {  history.push(evalExpression); }
+            if (history.length > 0) {
+                if (history[history.length - 1] !== evalExpression) {
+                    history.push(evalExpression);
+                }
+            } else {
+                history.push(evalExpression);
+            }
 
             historyIdx = history.length;
 
