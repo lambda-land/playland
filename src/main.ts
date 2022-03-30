@@ -39,12 +39,67 @@ function processSource(source: string): string {
     const linebreak = /\r\n|\n\r|\n|\r/g;
     const comments = /(--[^\n\r]*)/g;
     const emptylines = /^(?:[\t ]*(?:\r?\n|\r))+/gm;
+    const moduleHeader = /\s*module *[A-Z][\w\d]*.*/g;
 
     const reduced = source.replace(comments,'')
                           .replace(emptylines,'')
                           .replace(linebreak, '\n');
 
-    return reduced;
+    const lines = reduced.split('\n');
+    const first = lines.shift() || '';
+
+    // const first = lines.find(x => true) || '';
+
+    lines.unshift(first);
+
+    if (first.match(moduleHeader) === null) {
+        lines.unshift('module Definitions exposing (..)');
+    }
+
+    const processed = lines.join('\n');
+
+
+    for (const line of lines) {
+        console.log(line, line.match(moduleHeader));
+    }
+
+    console.log(lines);
+
+    console.log(processed)
+
+    return processed;
+
+    // return reduced;
+}
+
+function processError(error: string): string {
+
+    let lines = error.split('\n')
+                       // .map(s => '-- ' + s);
+    
+    const id = (x : any) => x;
+    const patterns: any = [
+        [/\s*-- [\w ]*-*.*/g, ((s:string) => s.replace((/-{3,}.*/g),''))],
+        [/.*\./g, ((s:string) => '-- ' + s)],
+        [/\d+\|.*/g, id],
+        [/\s*\^+\s*/g,id],
+        [/^[a-z]+(?: .*)?$|^[A-Z][A-Za-z]+\.\w+(?: .*)?$/,id],
+    ]
+    // for (let line of lines) {
+    lines = lines.map(line => {
+        if (line == '') return '';
+        
+        for (const [p,f] of patterns) {
+            if (line.match(p) !== null) {
+                // console.log(line,p,line.match(p))
+                return f(line);
+            }
+        }
+
+        return ['-- ',line].join('');
+    });
+    const processed = lines.join('\n');
+    return processed;
 }
 
 function getEvaluationEndpoint() {
@@ -169,6 +224,9 @@ function setupReplEditor(editors: Map<string,monaco.editor.IStandaloneCodeEditor
 
                     const data = res.data;
                     console.log(data);
+                    if (data['error'] != '') {
+                        data['error'] = processError(data['error'])
+                    }
                     const { lineNumber, column } = outputView.getPosition();
 
                     outputView.setValue(outputView.getValue() + evalExpression + '\n' + (data['evaluated'] || data['error']) + '\n> ');
