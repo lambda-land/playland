@@ -56,9 +56,13 @@ function getEvaluationEndpoint() {
         case 'http://localhost:3000/':
             return 'http://35.166.255.165:9000/eval'
         case 'https://playland.netlify.app/':
-            return 'https://playland.netlify.app/eval'
+            return 'https://playland.netlify.app/eval';
+        case 'http://playland.engr.oregonstate.edu/':
+            return 'http://playland.engr.oregonstate.edu:9000/eval';
+        case 'https://playland.engr.oregonstate.edu/':
+            return 'https://playland.engr.oregonstate.edu:9000/eval';
         default:
-            return 'https://play-land.netlify.app/eval';
+            return 'https://playland.netlify.app/eval';
             // return page + 'eval'
     }
 }
