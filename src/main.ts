@@ -62,7 +62,7 @@ function getEvaluationEndpoint() {
         case 'https://playland.engr.oregonstate.edu/':
             return 'https://playland.engr.oregonstate.edu:9000/eval';
         default:
-            return 'https://play-land.netlify.app/eval';
+            return 'https://playland.netlify.app/eval';
             // return page + 'eval'
     }
 }
